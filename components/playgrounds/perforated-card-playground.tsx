@@ -1,0 +1,87 @@
+"use client"
+
+import { useState } from "react"
+
+import {
+  OptionGroup,
+  PlaygroundShell,
+  RangeControl,
+  Toggle,
+  ToggleList,
+  raw,
+  toJsx,
+} from "@/components/docs/playground-controls"
+import { PerforatedCard } from "@/registry/relic/ui/perforated-card"
+
+const DEFAULTS = {
+  perforation: "dashed" as "dashed" | "dotted",
+  exitEffect: "fall" as "fall" | "fly" | "fade",
+  threshold: 70,
+  notches: true,
+}
+
+export function PerforatedCardPlayground() {
+  const [o, setO] = useState(DEFAULTS)
+  // Changing the key remounts the card, which puts the stub back.
+  const [round, setRound] = useState(0)
+  const set = <K extends keyof typeof DEFAULTS>(k: K, v: (typeof DEFAULTS)[K]) =>
+    setO((prev) => ({ ...prev, [k]: v }))
+
+  return (
+    <PlaygroundShell
+      onReset={() => {
+        setO(DEFAULTS)
+        setRound((r) => r + 1)
+      }}
+      preview={
+        <div className="flex w-full max-w-xs flex-col items-center gap-4">
+          <PerforatedCard
+            key={round}
+            {...o}
+            stub={
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span>Pull down to tear</span>
+                <span aria-hidden>↓</span>
+              </div>
+            }
+            reveal={
+              <p className="font-mono text-lg font-semibold tracking-widest">
+                RELIC-7F3K
+              </p>
+            }
+          >
+            <p className="text-3xl font-semibold tracking-tight">20% off</p>
+            <p className="mt-1 text-muted-foreground">Valid on any order.</p>
+          </PerforatedCard>
+          <button
+            type="button"
+            onClick={() => setRound((r) => r + 1)}
+            className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Put the stub back
+          </button>
+        </div>
+      }
+      controls={
+        <>
+          <OptionGroup label="perforation" options={["dashed", "dotted"] as const} value={o.perforation} onChange={(v) => set("perforation", v)} />
+          <OptionGroup label="exitEffect" options={["fall", "fly", "fade"] as const} value={o.exitEffect} onChange={(v) => set("exitEffect", v)} />
+          <RangeControl label="threshold" value={o.threshold} min={30} max={150} unit="px" onChange={(v) => set("threshold", v)} />
+          <ToggleList>
+            <Toggle label="notches" checked={o.notches} onChange={(v) => set("notches", v)} />
+          </ToggleList>
+        </>
+      }
+      code={toJsx(
+        "PerforatedCard",
+        {
+          stub: raw("<span>Pull down to tear</span>"),
+          reveal: raw("<p>RELIC-7F3K</p>"),
+          ...o,
+        },
+        DEFAULTS,
+        "<p>20% off</p>"
+      )}
+    />
+  )
+}
