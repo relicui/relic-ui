@@ -78,15 +78,15 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
         <motion.div
           initial={false}
           animate={{
-            maxWidth: scrolled ? 820 : 1152,
+            maxWidth: scrolled ? 900 : 1200,
             marginTop: scrolled ? 10 : 0,
-            height: scrolled ? 52 : 64,
+            height: scrolled ? 60 : 72,
           }}
           transition={{ type: "spring", stiffness: 300, damping: 34 }}
           className={cn(
             "relative mx-auto flex items-center gap-2 border transition-[background-color,border-color,box-shadow,border-radius,padding] duration-300",
             scrolled
-              ? "rounded-full border-border bg-background/80 pr-2 pl-4 shadow-lg shadow-black/5 backdrop-blur-md dark:shadow-black/40"
+              ? "rounded-full border-border bg-background/80 pr-2.5 pl-2.5 shadow-lg shadow-black/5 backdrop-blur-md dark:shadow-black/40"
               : "rounded-none border-transparent bg-background/0 px-4"
           )}
         >
@@ -94,9 +94,9 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
             href="/"
             aria-label={`${siteConfig.name} home`}
             onClick={() => setMenuOpen(false)}
-            className="group mr-2 shrink-0 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="group mr-4 shrink-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            <RelicLogo animated />
+            <RelicLogo animated separated />
           </Link>
 
           {/* Desktop links */}
@@ -116,7 +116,7 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
                   onFocus={() => setHovered(link.href)}
                   onBlur={() => setHovered(null)}
                   className={cn(
-                    "relative isolate rounded-full px-3 py-1.5 text-sm transition-colors outline-none",
+                    "relative isolate rounded-full px-3.5 py-2 text-[15px] transition-colors outline-none",
                     active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -142,7 +142,7 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
           <Link
             href="/components#search"
             onClick={openSearch}
-            className="hidden h-8 items-center gap-2 rounded-full border bg-muted/40 pr-1.5 pl-3 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
+            className="hidden h-9 items-center gap-2 rounded-full border bg-muted/40 pr-1.5 pl-3.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
           >
             <Search className="size-3.5" />
             <span className="pr-4">Search components</span>
@@ -162,7 +162,7 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             onClick={() => setMenuOpen((open) => !open)}
-            className="relative inline-flex size-8 items-center justify-center rounded-full text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 md:hidden"
+            className="relative inline-flex size-9 items-center justify-center rounded-full text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 md:hidden"
           >
             <motion.span
               aria-hidden
@@ -234,7 +234,7 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
         </motion.div>
       </header>
       {/* Keeps page content below the fixed header. */}
-      <div aria-hidden className="h-16" />
+      <div aria-hidden className="h-[72px]" />
     </MotionConfig>
   )
 }
@@ -333,7 +333,7 @@ function GitHubStars({ stars: initial }: { stars: number | null }) {
       target="_blank"
       rel="noreferrer"
       aria-label={label}
-      className="group/stars relative isolate hidden h-8 items-center gap-2 rounded-full pr-3 pl-2.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
+      className="group/stars relative isolate hidden h-9 items-center gap-2 rounded-full pr-3.5 pl-3 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
     >
       {/* The glow: a soft gold aura that breathes, and a light that travels
           around the border. */}
@@ -395,7 +395,7 @@ function ThemeToggle() {
       title="Toggle theme (D)"
       id={THEME_TOGGLE_ID}
       onClick={() => switchTheme(resolvedTheme === "dark" ? "light" : "dark", setTheme)}
-      className="relative inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+      className="relative inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       {/* Pure CSS swap, so it renders correctly before the theme is known. */}
       <Sun className="size-4 scale-100 rotate-0 transition-transform duration-300 dark:scale-0 dark:-rotate-90" />

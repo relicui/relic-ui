@@ -87,38 +87,38 @@ export function CodeBlock({
         onCopy={handleNativeCopy}
         className={cn("relative flex rounded-lg border bg-muted/40", className)}
       >
+        {/* The sweep: a gold caret draws a selection highlight across the whole block. */}
+        <AnimatePresence>
+          {status === "copied" && (
+            <motion.div
+              key={sweep}
+              aria-hidden
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]"
+              exit={{ opacity: 0, transition: { duration: 0.35 } }}
+            >
+              <motion.div
+                className="absolute inset-y-0 left-0 bg-brand/10"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 0.5, ease: EASE }}
+              />
+              <motion.div
+                className="absolute inset-y-2 w-0.5 -translate-x-full rounded-full bg-brand"
+                initial={{ left: "0%", opacity: 1 }}
+                animate={{ left: "100%", opacity: [1, 1, 0] }}
+                transition={{ duration: 0.5, ease: EASE }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* The code scrolls on its own, so it can never slide under the button. */}
         <pre className="max-h-[480px] min-w-0 flex-1 overflow-auto p-4 pr-2 font-mono text-sm leading-relaxed">
           <code>{code}</code>
         </pre>
 
         {/* The button's own lane on the right, lined up with the first line. */}
-        <div className="relative w-11 shrink-0">
-          {/* The sweep: a selection highlight drawn by a gold caret. */}
-          <AnimatePresence>
-            {status === "copied" && (
-              <motion.div
-                key={sweep}
-                aria-hidden
-                className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg"
-                exit={{ opacity: 0, transition: { duration: 0.35 } }}
-              >
-                <motion.div
-                  className="absolute inset-y-0 left-0 bg-brand/15"
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 0.5, ease: EASE }}
-                />
-                <motion.div
-                  className="absolute inset-y-2 w-0.5 -translate-x-full rounded-full bg-brand"
-                  initial={{ left: "0%", opacity: 1 }}
-                  animate={{ left: "100%", opacity: [1, 1, 0] }}
-                  transition={{ duration: 0.5, ease: EASE }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
+        <div className="relative z-10 w-11 shrink-0">
           <motion.button
             layout
             type="button"

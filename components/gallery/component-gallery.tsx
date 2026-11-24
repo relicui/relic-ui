@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
 
+import { ScrollRail } from "@/components/gallery/scroll-rail"
 import { cn } from "@/lib/utils"
 import { SmoothCaretInput } from "@/registry/relic/ui/smooth-caret-input"
 import { StretchTabs } from "@/registry/relic/ui/stretch-tabs"
@@ -86,7 +87,7 @@ export function ComponentGallery({
   return (
     <MotionConfig reducedMotion="user">
       {/* Controls */}
-      <div className="sticky top-16 z-30 -mx-4 border-b bg-background/85 px-4 py-4 backdrop-blur">
+      <div className="sticky top-[76px] z-30 -mx-4 border-b bg-background/85 px-4 py-4 backdrop-blur">
         <div className="flex flex-col gap-4">
           <div className="relative max-w-xl">
             <SmoothCaretInput
@@ -106,7 +107,7 @@ export function ComponentGallery({
               /
             </kbd>
           </div>
-          <div className="-mx-4 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <ScrollRail className="-mx-4 pb-1" watch={category}>
             <StretchTabs
               aria-label="Filter by category"
               variant="underline"
@@ -114,7 +115,7 @@ export function ComponentGallery({
               value={category}
               onValueChange={setCategory}
             />
-          </div>
+          </ScrollRail>
         </div>
       </div>
 

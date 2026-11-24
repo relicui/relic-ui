@@ -55,6 +55,7 @@ export function RelicLogo({
   blink = false,
   caretClassName,
   animated = false,
+  separated = false,
 }: {
   className?: string
   blink?: boolean
@@ -66,7 +67,36 @@ export function RelicLogo({
    * globals.css (.relic-logo-caret, .relic-wordmark).
    */
   animated?: boolean
+  /** The mark in its own tile, a thin divider, then a larger wordmark. */
+  separated?: boolean
 }) {
+  if (separated) {
+    return (
+      <span className={cn("inline-flex items-center gap-3", className)}>
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border bg-muted/40 shadow-sm transition-[border-color,background-color] duration-300 group-hover:border-brand/50 group-hover:bg-brand/5">
+          <RelicMark
+            blink={blink}
+            caretClassName={cn(animated && "relic-logo-caret", caretClassName)}
+            title=""
+            className="size-6"
+          />
+        </span>
+        <span aria-hidden className="h-6 w-px bg-border" />
+        <span className="text-lg font-semibold tracking-tight">
+          <span className={cn(animated && "relic-wordmark")}>Relic</span>
+          <span
+            className={cn(
+              "text-muted-foreground transition-colors duration-300",
+              animated && "group-hover:text-foreground group-focus-visible:text-foreground"
+            )}
+          >
+            {" "}
+            UI
+          </span>
+        </span>
+      </span>
+    )
+  }
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <RelicMark
