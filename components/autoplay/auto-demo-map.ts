@@ -35,6 +35,13 @@ import {
   AutoVaultCode,
   AutoWeekPulse,
 } from "@/components/autoplay/auto-demos-data"
+import {
+  AutoCohortTide,
+  AutoCorrelationMatrix,
+  AutoHeatMosaic,
+  AutoScrollDepth,
+} from "@/components/autoplay/auto-demos-heatmaps"
+import { AutoFollowButton, AutoProfileDeck, AutoReachRings } from "@/components/autoplay/auto-demos-social"
 
 /**
  * Self-playing demos by component name, for the landing page and gallery.
@@ -71,4 +78,11 @@ export const autoDemos: Record<string, ComponentType> = {
   "vault-code": AutoVaultCode,
   "crumple-trash": AutoCrumpleTrash,
   "week-pulse": AutoWeekPulse,
+  "scroll-depth": AutoScrollDepth,
+  "cohort-tide": AutoCohortTide,
+  "correlation-matrix": AutoCorrelationMatrix,
+  "heat-mosaic": AutoHeatMosaic,
+  "profile-deck": AutoProfileDeck,
+  "follow-button": AutoFollowButton,
+  "reach-rings": AutoReachRings,
 }

@@ -886,6 +886,168 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "scroll-depth",
+      "type": "registry:ui",
+      "title": "Scroll Depth",
+      "description": "An attention heatmap for long pages that shows how far down people really read.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/scroll-depth.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cohort-tide",
+      "type": "registry:ui",
+      "title": "Cohort Tide",
+      "description": "A retention cohort heatmap where every cell fills like a tide, with a calendar-diagonal highlight.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/cohort-tide.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "correlation-matrix",
+      "type": "registry:ui",
+      "title": "Correlation Matrix",
+      "description": "A diverging correlation heatmap that can reorder itself so related variables sit together.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/correlation-matrix.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "heat-mosaic",
+      "type": "registry:ui",
+      "title": "Heat Mosaic",
+      "description": "A treemap heatmap where size is weight and color is change, with zoom into groups.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/heat-mosaic.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "profile-deck",
+      "type": "registry:ui",
+      "title": "Profile Deck",
+      "description": "One person on every platform as a deck of profile cards you flick through.",
+      "categories": [
+        "social"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/profile-deck.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "follower-ticker",
+      "type": "registry:ui",
+      "title": "Follower Ticker",
+      "description": "A follower count badge with rolling digits, a milestone ring and a celebration stamp.",
+      "categories": [
+        "social"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/follower-ticker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "follow-button",
+      "type": "registry:ui",
+      "title": "Follow Button",
+      "description": "A follow button that rolls the count and flies your avatar into the followed-by stack.",
+      "categories": [
+        "social"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/follow-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "reach-rings",
+      "type": "registry:ui",
+      "title": "Reach Rings",
+      "description": "Your audience across platforms as rings, with the combined reach in the middle.",
+      "categories": [
+        "social"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/reach-rings.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "milestone-road",
+      "type": "registry:ui",
+      "title": "Milestone Road",
+      "description": "The road to your next follower milestone, with dates passed and a pace-based projection.",
+      "categories": [
+        "social"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/milestone-road.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

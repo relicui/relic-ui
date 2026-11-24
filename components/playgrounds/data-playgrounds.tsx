@@ -116,15 +116,15 @@ export function PaperDropPlayground() {
 /* -------------------------------- Fold Tree -------------------------------- */
 
 export function FoldTreePlayground() {
-  const D = { showLines: true, indent: 16 }
+  const D = { showThread: true, peek: true, peekCount: 3, showCount: true, showLines: true, indent: 16 }
   const [o, setO] = useState(D)
-  const [picked, setPicked] = useState("page.tsx")
-  const [expanded, setExpanded] = useState<string[]>(["app"])
+  const [picked, setPicked] = useState("app/docs/[slug]/page.tsx")
+  const [expanded, setExpanded] = useState<string[]>(["app", "docs", "docs-slug"])
   return (
     <PlaygroundShell
       onReset={() => {
         setO(D)
-        setExpanded(["app"])
+        setExpanded(["app", "docs", "docs-slug"])
       }}
       preview={
         <div className="flex w-full max-w-xs flex-col gap-2">
@@ -134,7 +134,7 @@ export function FoldTreePlayground() {
               {...o}
               expanded={expanded}
               onExpandedChange={setExpanded}
-              defaultSelected="page"
+              defaultSelected="slug-page"
               onSelect={(node) => setPicked(String(node.label))}
             />
           </div>
@@ -156,7 +156,11 @@ export function FoldTreePlayground() {
       controls={
         <>
           <RangeControl label="indent" value={o.indent} min={8} max={28} step={2} onChange={(v) => setO({ ...o, indent: v })} />
+          <RangeControl label="peekCount" value={o.peekCount} min={1} max={5} step={1} onChange={(v) => setO({ ...o, peekCount: v })} />
           <ToggleList>
+            <Toggle label="showThread" checked={o.showThread} onChange={(v) => setO({ ...o, showThread: v })} />
+            <Toggle label="peek" checked={o.peek} onChange={(v) => setO({ ...o, peek: v })} />
+            <Toggle label="showCount" checked={o.showCount} onChange={(v) => setO({ ...o, showCount: v })} />
             <Toggle label="showLines" checked={o.showLines} onChange={(v) => setO({ ...o, showLines: v })} />
           </ToggleList>
         </>

@@ -39,12 +39,22 @@ export const CATEGORIES = [
   { id: "physics", label: "Physics" },
   { id: "files", label: "Files & Folders" },
   { id: "data", label: "Data & Analytics" },
+  { id: "social", label: "Social & Profiles" },
 ] as const
 
 export type CategoryId = (typeof CATEGORIES)[number]["id"]
 
 /** Shown with a "New" badge in the gallery. Remove names as they age. */
 export const NEW_COMPONENTS = new Set([
+  "profile-deck",
+  "follower-ticker",
+  "follow-button",
+  "reach-rings",
+  "milestone-road",
+  "scroll-depth",
+  "cohort-tide",
+  "correlation-matrix",
+  "heat-mosaic",
   "paper-drop",
   "fold-tree",
   "vault-code",
@@ -90,4 +100,7 @@ export const WIDE_COMPONENTS = new Set([
   "week-pulse",
   "hotspot-map",
   "visitor-map",
+  "cohort-tide",
+  "heat-mosaic",
+  "milestone-road",
 ])

@@ -1,4 +1,9 @@
 import * as P from "@/components/playgrounds/data-playgrounds"
+import * as H from "@/components/playgrounds/heatmap-playgrounds"
+import CohortTideDemo from "@/registry/relic/examples/cohort-tide-demo"
+import CorrelationMatrixDemo from "@/registry/relic/examples/correlation-matrix-demo"
+import HeatMosaicDemo from "@/registry/relic/examples/heat-mosaic-demo"
+import ScrollDepthDemo from "@/registry/relic/examples/scroll-depth-demo"
 import { REDUCED_MOTION, type DocExtras, type PropDoc } from "@/lib/docs-shared"
 import CrumpleTrashDemo from "@/registry/relic/examples/crumple-trash-demo"
 import FoldTreeDemo from "@/registry/relic/examples/fold-tree-demo"
@@ -48,6 +53,10 @@ export const dataExtras: Record<string, DocExtras> = {
       p("onExpandedChange", "(ids: string[]) => void", "Called when a folder opens or closes."),
       p("selected / defaultSelected", "string | null", "The selected item, controlled or at first."),
       p("onSelect", "(node) => void", "Called when an item is clicked or chosen with Enter."),
+      p("showThread", "boolean", "A gold thread drawn from the root to the selected item, so you never lose your place.", "true"),
+      p("peek", "boolean", "Hovering or focusing a closed folder slides its first items out like paper slips.", "true"),
+      p("peekCount", "number", "How many slips a peek shows.", "3"),
+      p("showCount", "boolean", "Show how many items each folder holds.", "true"),
       p("showLines", "boolean", "Draw guide lines down open folders.", "true"),
       p("indent", "number", "Pixels of indent per level.", "16"),
       p("label", "string", "Accessible name of the tree.", '"Files"'),
@@ -55,6 +64,8 @@ export const dataExtras: Record<string, DocExtras> = {
     accessibility: [
       "Uses the tree, treeitem and group roles with aria-level, aria-expanded and aria-selected.",
       "One Tab stop: ↑ ↓ move, → opens or steps in, ← closes or steps out, Home and End jump, Enter selects.",
+      "Type the first letters of a name to jump straight to it.",
+      "Peeks show on keyboard focus too, and the thread and slips are decoration hidden from screen readers.",
       REDUCED_MOTION,
     ],
   },
@@ -192,6 +203,92 @@ export const dataExtras: Record<string, DocExtras> = {
       "Every place is a real button in a list, read as “Mumbai: 128 visitors”, so the map works with Tab.",
       "Focusing a place shows its tooltip, just like hovering, and pauses the auto tour.",
       "No map tiles or network requests: land shapes are built in.",
+      REDUCED_MOTION,
+    ],
+  },
+  "scroll-depth": {
+    Demo: ScrollDepthDemo,
+    Playground: H.ScrollDepthPlayground,
+    props: [
+      p("reach", "number[]", "Share of visitors (0–1) that reached each depth, top to bottom, evenly spaced."),
+      p("sessions", "number[]", "Or: the deepest point each visit reached (0–1). The curve is worked out for you."),
+      p("children", "ReactNode", "The page or screenshot to lay the heat over."),
+      p("palette", '"heat" | "brand" | "mono"', "Colors of the heat.", '"heat"'),
+      p("opacity", "number", "Opacity of the heat.", "0.45"),
+      p("fold", "number", "Where the first screen ends (0–1). Draws a fold line with how many see it."),
+      p("markers", "number[]", "Draw a line where reach drops below each share.", "[0.5]"),
+      p("showGauge", "boolean", "The drop-off curve beside the page, which is also a keyboard slider.", "true"),
+      p("animate", "boolean", "Pour the heat in from the top.", "true"),
+      p("unit", "string", "What a visitor is called in the labels.", '"visitors"'),
+    ],
+    accessibility: [
+      "The gauge is a vertical slider: ↑ ↓ (and Page Up/Down, Home, End) move the probe, and it reads “40% down the page: 63% of visitors get this far”.",
+      "The heat ignores the pointer, so the page underneath stays usable.",
+      REDUCED_MOTION,
+    ],
+  },
+  "cohort-tide": {
+    Demo: CohortTideDemo,
+    Playground: H.CohortTidePlayground,
+    props: [
+      p("cohorts", "{ label; size?; values: number[] }[]", "One row per cohort. values are the share still here in each period (0–1)."),
+      p("fill", '"tide" | "solid"', "A rising water level in each cell, or a plain color.", '"tide"'),
+      p("scale", '"primary" | "brand" | "heat"', "Color of the tide.", '"primary"'),
+      p("highlight", '"crosshair" | "diagonal"', "Light up the cohort and period, or the same calendar period across all cohorts.", '"crosshair"'),
+      p("periodLabel", "(i: number) => string", "Column headings.", "i => `W${i}`"),
+      p("periodName", "string", "Word for one period, e.g. \"Month\".", '"Week"'),
+      p("showAverage", "boolean", "A size-weighted average row.", "true"),
+      p("showSize", "boolean", "A column with each cohort's size.", "true"),
+      p("animate", "boolean", "Let the tide roll in.", "true"),
+      p("onCellClick", "({ cohort, period, value }) => void", "Called when a cell is clicked or chosen with Enter."),
+    ],
+    accessibility: [
+      "A real grid with row and column headers; every cell reads as “Jan 13, Week 3: 42% retained, 504 people”.",
+      "One Tab stop: arrow keys move, Home and End jump along the row, Enter clicks.",
+      "The percentage is always printed, so the tide's color is never the only signal.",
+      REDUCED_MOTION,
+    ],
+  },
+  "correlation-matrix": {
+    Demo: CorrelationMatrixDemo,
+    Playground: H.CorrelationMatrixPlayground,
+    props: [
+      p("labels", "string[]", "Variable names."),
+      p("values", "number[][]", "A square matrix of correlations from −1 to 1."),
+      p("order", '"original" | "clustered"', "Keep your order, or glide related variables next to each other.", '"original"'),
+      p("triangle", '"full" | "lower"', "The whole square, or just the lower half.", '"full"'),
+      p("shape", '"square" | "circle"', "Color squares, or dots that grow with strength.", '"square"'),
+      p("palette", '"blue-red" | "purple-green" | "brand"', "Diverging colors for negative and positive.", '"blue-red"'),
+      p("showValues", "boolean", "Print the numbers. On by default for 8 variables or fewer."),
+      p("decimals", "number", "Decimals in the numbers.", "2"),
+      p("showLegend", "boolean", "A −1 → +1 scale.", "true"),
+      p("onCellClick", "({ row, col, value }) => void", "Called when a cell is clicked or chosen with Enter."),
+    ],
+    accessibility: [
+      "Every cell reads the pair and a plain-words strength: “Rating and Reviews: 0.72, strong positive”.",
+      "One Tab stop: arrow keys move through the matrix, even after it reorders.",
+      "The blue-red and purple-green palettes stay apart for common color blindness, and strength also shows as number or dot size.",
+      REDUCED_MOTION,
+    ],
+  },
+  "heat-mosaic": {
+    Demo: HeatMosaicDemo,
+    Playground: H.HeatMosaicPlayground,
+    props: [
+      p("items", "{ id; label; size; value; group? }[]", "Tiles: size sets the area, value sets the color. Items with a group sit together."),
+      p("height", "number", "Height in pixels; the width fills the container.", "360"),
+      p("palette", '"green-red" | "blue-orange" | "brand"', "Colors for falling and rising values.", '"green-red"'),
+      p("range", "number", "The value that gets the strongest color. Defaults to the largest."),
+      p("format / formatSize", "(n: number) => string", "Format values and sizes in the tiles and readout."),
+      p("zoomable", "boolean", "Click a group to zoom into it; Esc or All zooms out.", "true"),
+      p("showGroupLabels", "boolean", "Group names above each block.", "true"),
+      p("gap", "number", "Gap between tiles in pixels.", "2"),
+      p("onItemClick", "(item) => void", "Called when a tile is clicked (inside a zoomed group, or always without groups)."),
+    ],
+    accessibility: [
+      "Every tile is a real button, read as “Nimbus, Tech: +2.4%, size $2900B”.",
+      "One Tab stop: arrow keys step through tiles from largest to smallest, Enter zooms or clicks, Esc zooms out.",
+      "Values are printed on tiles big enough to fit them, and always shown in the readout below.",
       REDUCED_MOTION,
     ],
   },

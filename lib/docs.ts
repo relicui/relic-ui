@@ -8,6 +8,7 @@ import { StretchTabsPlayground } from "@/components/playgrounds/stretch-tabs-pla
 import { moreExtras } from "@/lib/docs-more"
 import { aiExtras } from "@/lib/docs-ai"
 import { dataExtras } from "@/lib/docs-data"
+import { socialExtras } from "@/lib/docs-social"
 import { themeExtras } from "@/lib/docs-themes"
 import {
   CATEGORIES,
@@ -562,7 +563,7 @@ const extras: Record<string, DocExtras> = {
 
 export type { PropDoc } from "@/lib/docs-shared"
 
-const allExtras: Record<string, DocExtras> = { ...extras, ...moreExtras, ...themeExtras, ...aiExtras, ...dataExtras }
+const allExtras: Record<string, DocExtras> = { ...extras, ...moreExtras, ...themeExtras, ...aiExtras, ...dataExtras, ...socialExtras }
 
 export type DocItem = (typeof registry.items)[number] &
   DocExtras & { demoPath: string; category: CategoryId }

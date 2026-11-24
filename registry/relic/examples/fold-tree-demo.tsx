@@ -40,7 +40,7 @@ export const projectFiles: TreeNode[] = [
 export default function FoldTreeDemo() {
   return (
     <div className="w-full max-w-xs rounded-xl border bg-background p-2">
-      <FoldTree data={projectFiles} defaultExpanded={["app", "components"]} defaultSelected="page" />
+      <FoldTree data={projectFiles} defaultExpanded={["components", "ui"]} defaultSelected="fold-tree" />
     </div>
   )
 }
