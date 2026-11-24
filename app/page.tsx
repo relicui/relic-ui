@@ -14,18 +14,18 @@ import {
 
 import { BrowseButton } from "@/components/browse-button"
 import { CodeBlock } from "@/components/docs/code-block"
-import { CaretField } from "@/components/landing/caret-field"
-import { TypedWord } from "@/components/landing/typed-word"
 import { RelicMark } from "@/components/relic-logo"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { docs } from "@/lib/docs"
 import { siteConfig } from "@/lib/site"
 import { cn } from "@/lib/utils"
+import { CaretField } from "@/registry/relic/ui/caret-field"
 import { ElasticDivider } from "@/registry/relic/ui/elastic-divider"
 import { FoldAccordion } from "@/registry/relic/ui/fold-accordion"
 import { HoldToConfirmButton } from "@/registry/relic/ui/hold-to-confirm-button"
 import { PerforatedCard } from "@/registry/relic/ui/perforated-card"
+import { RewriteText } from "@/registry/relic/ui/rewrite-text"
 import { ShimmerButton } from "@/registry/relic/ui/shimmer-button"
 import { SmoothCaretInput } from "@/registry/relic/ui/smooth-caret-input"
 import { StretchTabs } from "@/registry/relic/ui/stretch-tabs"
@@ -141,7 +141,7 @@ const faq = [
   {
     value: "free",
     title: "Is it free?",
-    content: "Yes, for personal and commercial projects, with a credit link.",
+    content: "Yes. It's open source under the MIT License, for any project.",
   },
 ]
 
@@ -159,7 +159,10 @@ export default function Page() {
       <main>
         {/* ------------------------------ Hero ------------------------------ */}
         <section className="relative overflow-hidden">
-          <CaretField className="absolute inset-0 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_30%,black_30%,transparent)]" />
+          <CaretField
+            accentVar="--brand"
+            className="absolute inset-0 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_30%,black_30%,transparent)]"
+          />
           <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 pt-24 pb-16 text-center md:pt-36 md:pb-24">
             <Link
               href="/docs/smooth-caret-input"
@@ -178,8 +181,9 @@ export default function Page() {
                 Interfaces that feel
               </span>
               <span aria-hidden className="mt-1 block">
-                <TypedWord
+                <RewriteText
                   words={HERO_WORDS}
+                  caretClassName="bg-brand"
                   className="font-serif font-normal tracking-normal italic"
                 />
               </span>
@@ -203,7 +207,7 @@ export default function Page() {
             </div>
 
             <p className="mt-8 font-mono text-xs text-muted-foreground">
-              {docs.length} components · free to use · keyboard &amp;
+              {docs.length} components · open source · keyboard &amp;
               reduced-motion ready
             </p>
           </div>

@@ -1,5 +1,3 @@
-import type { ComponentType } from "react"
-
 import { ElasticDividerPlayground } from "@/components/playgrounds/elastic-divider-playground"
 import { FoldAccordionPlayground } from "@/components/playgrounds/fold-accordion-playground"
 import { HoldToConfirmButtonPlayground } from "@/components/playgrounds/hold-to-confirm-button-playground"
@@ -7,6 +5,14 @@ import { PerforatedCardPlayground } from "@/components/playgrounds/perforated-ca
 import { ShimmerButtonPlayground } from "@/components/playgrounds/shimmer-button-playground"
 import { SmoothCaretInputPlayground } from "@/components/playgrounds/smooth-caret-input-playground"
 import { StretchTabsPlayground } from "@/components/playgrounds/stretch-tabs-playground"
+import { moreExtras } from "@/lib/docs-more"
+import {
+  CATEGORIES,
+  nativeProps,
+  REDUCED_MOTION,
+  type CategoryId,
+  type DocExtras,
+} from "@/lib/docs-shared"
 import registry from "@/registry.json"
 import ElasticDividerDemo from "@/registry/relic/examples/elastic-divider-demo"
 import FoldAccordionDemo from "@/registry/relic/examples/fold-accordion-demo"
@@ -16,29 +22,6 @@ import ShimmerButtonDemo from "@/registry/relic/examples/shimmer-button-demo"
 import SmoothCaretInputDemo from "@/registry/relic/examples/smooth-caret-input-demo"
 import StretchTabsDemo from "@/registry/relic/examples/stretch-tabs-demo"
 
-export type PropDoc = {
-  name: string
-  type: string
-  default?: string
-  description: string
-}
-
-type DocExtras = {
-  Demo: ComponentType
-  /** Optional interactive playground shown in a "Customize" section. */
-  Playground?: ComponentType
-  props?: PropDoc[]
-  accessibility?: string[]
-}
-
-const REDUCED_MOTION =
-  "Animation turns off automatically for users who enable reduced motion in their system settings."
-
-const nativeProps = (element: string): PropDoc => ({
-  name: "...props",
-  type: `React.ComponentProps<"${element}">`,
-  description: `All native ${element} props.`,
-})
 
 /**
  * Every component that should get a docs page needs an entry here.
@@ -463,17 +446,32 @@ const extras: Record<string, DocExtras> = {
   },
 }
 
+export type { PropDoc } from "@/lib/docs-shared"
+
+const allExtras: Record<string, DocExtras> = { ...extras, ...moreExtras }
+
 export type DocItem = (typeof registry.items)[number] &
-  DocExtras & { demoPath: string }
+  DocExtras & { demoPath: string; category: CategoryId }
 
 export const docs: DocItem[] = registry.items
-  .filter((item) => item.name in extras)
+  .filter((item) => item.name in allExtras)
   .map((item) => ({
     ...item,
-    ...extras[item.name],
+    ...allExtras[item.name],
+    category: (item.categories?.[0] ?? "effects") as CategoryId,
     demoPath: `registry/relic/examples/${item.name}-demo.tsx`,
   }))
 
 export function getDoc(name: string) {
   return docs.find((doc) => doc.name === name)
+}
+
+/** Docs grouped by category, in category order, skipping empty ones. */
+export const docsByCategory = CATEGORIES.map((category) => ({
+  ...category,
+  items: docs.filter((doc) => doc.category === category.id),
+})).filter((group) => group.items.length > 0)
+
+export function categoryLabel(id: CategoryId) {
+  return CATEGORIES.find((c) => c.id === id)?.label ?? id
 }

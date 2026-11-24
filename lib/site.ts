@@ -11,7 +11,7 @@ export const siteConfig = {
   // Used by the Privacy Policy, Terms of Service and LICENSE page.
   operator: "Shubham Tambe",
   country: "India",
-  license: "MIT with attribution and the Commons Clause",
+  license: "MIT License",
   // Shown on the legal pages. Update it whenever you change them.
   legalUpdated: "November 23, 2026",
   // Used as "last modified" in the sitemap. Update it when you ship changes.

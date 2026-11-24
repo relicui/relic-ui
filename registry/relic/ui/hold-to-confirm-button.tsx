@@ -5,8 +5,7 @@
  * https://relic-ui.vercel.app/docs/hold-to-confirm-button
  *
  * Copyright (c) 2026 Shubham Tambe
- * Relic UI License (MIT + attribution + Commons Clause).
- * Keep this notice. Full license: https://relic-ui.vercel.app/license
+ * Open source under the MIT License: https://relic-ui.vercel.app/license
  */
 
 import { useEffect, useId, useRef, useState } from "react"

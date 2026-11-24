@@ -29,7 +29,7 @@ export function SiteFooter() {
             {siteConfig.name} © {new Date().getFullYear()}
           </span>
           <Dot />
-          <span>Free to use with credit</span>
+          <span>Open source · MIT</span>
           {siteConfig.supportEmail && (
             <>
               <Dot />

@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "License",
-  description: `${siteConfig.name} is free to use under the ${siteConfig.license}.`,
+  description: `${siteConfig.name} is open source under the ${siteConfig.license}.`,
 }
 
 const creditSnippet = `<a href="${siteConfig.url}">UI components by ${siteConfig.name}</a>`
@@ -20,14 +20,25 @@ export default async function LicensePage() {
   return (
     <LegalPage
       title="License"
-      intro={`${siteConfig.name} is free to use in personal and commercial projects, with a credit link.`}
+      intro={`${siteConfig.name} is open source under the MIT License. Use it in any project, personal or commercial.`}
     >
       <section>
-        <h2>How to credit {siteConfig.name}</h2>
+        <h2>In short</h2>
+        <ul>
+          <li>Use, copy and change the components in any project, including paid and closed-source ones.</li>
+          <li>If you share the source code itself, keep the copyright and license notice in it.</li>
+          <li>
+            The license covers the code only. The {siteConfig.name} name and
+            logo stay ours.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Crediting {siteConfig.name} (appreciated, not required)</h2>
         <p>
-          Add a visible link to {siteConfig.name} anywhere users can find it,
-          such as your footer, an about or credits page, or your README. For
-          example:
+          A link back helps the project grow. If you&apos;d like to add one,
+          for example in your footer or README:
         </p>
         <CodeBlock className="mt-4" code={creditSnippet} />
       </section>

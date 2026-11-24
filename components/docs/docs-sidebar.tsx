@@ -5,9 +5,13 @@ import { usePathname } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 
-type SidebarItem = { name: string; title: string }
+type SidebarGroup = {
+  id: string
+  label: string
+  items: { name: string; title: string }[]
+}
 
-export function DocsSidebar({ items }: { items: SidebarItem[] }) {
+export function DocsSidebar({ groups }: { groups: SidebarGroup[] }) {
   const pathname = usePathname()
 
   const linkClass = (href: string) =>
@@ -19,7 +23,7 @@ export function DocsSidebar({ items }: { items: SidebarItem[] }) {
     )
 
   return (
-    <nav className="flex flex-col gap-6">
+    <nav aria-label="Components" className="flex flex-col gap-6">
       <div>
         <p className="mb-2 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
           Getting Started
@@ -28,20 +32,22 @@ export function DocsSidebar({ items }: { items: SidebarItem[] }) {
           Introduction
         </Link>
       </div>
-      <div>
-        <p className="mb-2 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-          Components
-        </p>
-        {items.map((item) => (
-          <Link
-            key={item.name}
-            href={`/docs/${item.name}`}
-            className={linkClass(`/docs/${item.name}`)}
-          >
-            {item.title}
-          </Link>
-        ))}
-      </div>
+      {groups.map((group) => (
+        <div key={group.id}>
+          <p className="mb-2 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            {group.label}
+          </p>
+          {group.items.map((item) => (
+            <Link
+              key={item.name}
+              href={`/docs/${item.name}`}
+              className={linkClass(`/docs/${item.name}`)}
+            >
+              {item.title}
+            </Link>
+          ))}
+        </div>
+      ))}
     </nav>
   )
 }

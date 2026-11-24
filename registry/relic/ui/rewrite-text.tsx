@@ -1,34 +1,55 @@
 "use client"
 
+/**
+ * Relic UI · Rewrite Text
+ * https://relic-ui.vercel.app/docs/rewrite-text
+ *
+ * Copyright (c) 2026 Shubham Tambe
+ * Open source under the MIT License: https://relic-ui.vercel.app/license
+ */
+
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
-const HOLD = 2400 // how long each word stays
-const SELECT = 450 // how long the "select all" highlight shows
-const PAUSE = 320 // gap after deleting, before typing
-const KEY = 70 // base time per typed letter
+export interface RewriteTextProps
+  extends Omit<React.ComponentProps<"span">, "children"> {
+  /** The words to cycle through. The first one shows first. */
+  words: string[]
+  /** Seconds each word stays before it's rewritten. */
+  hold?: number
+  /** Milliseconds per typed letter (a little randomness is added). */
+  typeSpeed?: number
+  /** Show the "select all" highlight before deleting. */
+  highlight?: boolean
+  /** Extra classes for the caret, e.g. a color like "bg-amber-500". */
+  caretClassName?: string
+}
 
 /**
- * A word that rewrites itself like someone editing text: the caret selects
- * it, the letters blur away, and the next word is typed in.
+ * Text that rewrites itself like someone editing it: the caret selects the
+ * word, the letters blur away, and the next word is typed in.
  */
-export function TypedWord({
+export function RewriteText({
   words,
+  hold = 2.4,
+  typeSpeed = 70,
+  highlight = true,
+  caretClassName,
   className,
-}: {
-  words: string[]
-  className?: string
-}) {
+  ...props
+}: RewriteTextProps) {
   const reduceMotion = useReducedMotion()
-  const [text, setText] = useState(words[0])
+  const [text, setText] = useState(words[0] ?? "")
   const [selected, setSelected] = useState(false)
   // Bumped for every new word so its letters get fresh keys and animate in.
   const [round, setRound] = useState(0)
+  const wordsKey = words.join("\u0000")
 
   useEffect(() => {
-    if (reduceMotion || words.length < 2) return
+    const list = wordsKey.split("\u0000")
+    if (reduceMotion || list.length < 2) return
     let cancelled = false
     const timers: ReturnType<typeof setTimeout>[] = []
     const wait = (ms: number) =>
@@ -37,23 +58,24 @@ export function TypedWord({
     async function run() {
       let index = 0
       while (!cancelled) {
-        await wait(HOLD)
+        await wait(hold * 1000)
         if (cancelled) return
-        setSelected(true)
-        await wait(SELECT)
-        if (cancelled) return
-        setSelected(false)
+        if (highlight) {
+          setSelected(true)
+          await wait(450)
+          if (cancelled) return
+          setSelected(false)
+        }
         setText("")
         setRound((r) => r + 1)
-        await wait(PAUSE)
+        await wait(320)
 
-        index = (index + 1) % words.length
-        const word = words[index]
+        index = (index + 1) % list.length
+        const word = list[index]
         for (let n = 1; n <= word.length; n++) {
           if (cancelled) return
           setText(word.slice(0, n))
-          // A little irregular, like real typing.
-          await wait(KEY + Math.random() * 60)
+          await wait(typeSpeed + Math.random() * typeSpeed * 0.85)
         }
       }
     }
@@ -63,11 +85,17 @@ export function TypedWord({
       cancelled = true
       timers.forEach(clearTimeout)
     }
-  }, [reduceMotion, words])
+  }, [reduceMotion, wordsKey, hold, typeSpeed, highlight])
 
   return (
-    <span className={cn("relative inline-flex items-baseline", className)}>
+    <span
+      data-slot="rewrite-text"
+      className={cn("relative inline-flex items-baseline", className)}
+      {...props}
+    >
+      <span className="sr-only">{words[0]}</span>
       <span
+        aria-hidden
         className={cn(
           "relative inline-flex rounded-lg px-[0.04em] transition-colors duration-200",
           selected ? "bg-primary/15" : "bg-transparent"
@@ -77,7 +105,7 @@ export function TypedWord({
           {Array.from(text).map((ch, i) => (
             <motion.span
               key={`${round}-${i}`}
-              className="inline-block"
+              className="inline-block whitespace-pre"
               initial={{ opacity: 0, y: "0.2em", filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
@@ -92,7 +120,10 @@ export function TypedWord({
       <motion.span
         layout
         aria-hidden
-        className="ml-[0.06em] inline-block h-[0.82em] w-[0.055em] translate-y-[0.08em] self-center rounded-full bg-brand"
+        className={cn(
+          "ml-[0.06em] inline-block h-[0.82em] w-[0.055em] min-w-0.5 translate-y-[0.08em] self-center rounded-full bg-primary",
+          caretClassName
+        )}
         animate={
           reduceMotion
             ? { opacity: 0 }

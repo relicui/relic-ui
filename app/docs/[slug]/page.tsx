@@ -6,7 +6,7 @@ import { notFound } from "next/navigation"
 import { CodeBlock } from "@/components/docs/code-block"
 import { ComponentPreview } from "@/components/docs/component-preview"
 import { PropsTable } from "@/components/docs/props-table"
-import { docs, getDoc } from "@/lib/docs"
+import { categoryLabel, docs, getDoc } from "@/lib/docs"
 import { siteConfig } from "@/lib/site"
 
 type Props = { params: Promise<{ slug: string }> }
@@ -58,6 +58,9 @@ export default async function ComponentDocPage({ params }: Props) {
 
   return (
     <article className="max-w-3xl">
+      <p className="mb-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+        {categoryLabel(doc.category)}
+      </p>
       <h1 className="text-3xl font-semibold tracking-tight">{doc.title}</h1>
       <p className="mt-2 text-lg text-muted-foreground">{doc.description}</p>
 
@@ -69,6 +72,12 @@ export default async function ComponentDocPage({ params }: Props) {
 
       <SectionHeading>Installation</SectionHeading>
       <CodeBlock code={installCommand} />
+      <p className="mt-3 text-sm text-muted-foreground">
+        Or straight from GitHub:{" "}
+        <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+          npx shadcn@latest add relicui/relic-ui/{doc.name}
+        </code>
+      </p>
 
       <details className="group mt-4 rounded-lg border">
         <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-muted-foreground select-none hover:text-foreground">

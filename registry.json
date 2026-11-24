@@ -8,23 +8,215 @@
       "type": "registry:ui",
       "title": "Hold to Confirm Button",
       "description": "A button for risky actions that only confirms after it's held down.",
-      "dependencies": ["motion", "class-variance-authority"],
+      "dependencies": [
+        "motion",
+        "class-variance-authority"
+      ],
       "files": [
         {
           "path": "registry/relic/ui/hold-to-confirm-button.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "buttons"
       ]
     },
     {
-      "name": "elastic-divider",
+      "name": "shimmer-button",
       "type": "registry:ui",
-      "title": "Elastic Divider",
-      "description": "A divider line that bends toward the cursor like a string and wobbles back.",
-      "dependencies": ["motion"],
+      "title": "Shimmer Button",
+      "description": "A button with an animated shimmer sweep.",
+      "dependencies": [
+        "motion",
+        "class-variance-authority"
+      ],
       "files": [
         {
-          "path": "registry/relic/ui/elastic-divider.tsx",
+          "path": "registry/relic/ui/shimmer-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": [
+        "buttons"
+      ]
+    },
+    {
+      "name": "smooth-caret-input",
+      "type": "registry:ui",
+      "title": "Smooth Caret Input",
+      "description": "A text input whose caret glides between characters as new letters ease in.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/smooth-caret-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": [
+        "inputs"
+      ]
+    },
+    {
+      "name": "seeker-search",
+      "type": "registry:ui",
+      "title": "Seeker Search",
+      "description": "A search box whose placeholder types its own suggestions, with highlighted, keyboard-driven results.",
+      "categories": [
+        "inputs"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/seeker-search.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "caret-tag-input",
+      "type": "registry:ui",
+      "title": "Caret Tag Input",
+      "description": "A tag field where every new tag flies out of the caret and lands as a chip.",
+      "categories": [
+        "inputs"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/caret-tag-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dial-number-input",
+      "type": "registry:ui",
+      "title": "Dial Number Input",
+      "description": "A number you spin like a combination lock: drag, scroll or use the arrow keys.",
+      "categories": [
+        "inputs"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/dial-number-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stretch-switch",
+      "type": "registry:ui",
+      "title": "Stretch Switch",
+      "description": "A switch whose thumb stretches like a drop of liquid as it travels.",
+      "categories": [
+        "toggles"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/stretch-switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "rocker-switch",
+      "type": "registry:ui",
+      "title": "Rocker Switch",
+      "description": "A physical light-switch rocker that tilts, with real light and shadow.",
+      "categories": [
+        "toggles"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/rocker-switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ink-checkbox",
+      "type": "registry:ui",
+      "title": "Ink Checkbox",
+      "description": "A checkbox where ink bleeds out from your click, then the check draws itself.",
+      "categories": [
+        "toggles"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/ink-checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "caret-loader",
+      "type": "registry:ui",
+      "title": "Caret Loader",
+      "description": "A caret that types a row of dots, deletes them and types again.",
+      "categories": [
+        "loaders"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/caret-loader.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "perforation-progress",
+      "type": "registry:ui",
+      "title": "Perforation Progress",
+      "description": "A progress bar drawn as a tear line, with a wave across it at 100%.",
+      "categories": [
+        "loaders"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/perforation-progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "etch-skeleton",
+      "type": "registry:ui",
+      "title": "Etch Skeleton",
+      "description": "A loading placeholder where a caret writes each line instead of shimmering.",
+      "categories": [
+        "loaders"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/etch-skeleton.tsx",
           "type": "registry:ui"
         }
       ]
@@ -34,12 +226,17 @@
       "type": "registry:ui",
       "title": "Stretch Tabs",
       "description": "Tabs whose indicator stretches in the direction it moves, then settles.",
-      "dependencies": ["motion"],
+      "dependencies": [
+        "motion"
+      ],
       "files": [
         {
           "path": "registry/relic/ui/stretch-tabs.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "navigation"
       ]
     },
     {
@@ -47,25 +244,17 @@
       "type": "registry:ui",
       "title": "Fold Accordion",
       "description": "An accordion whose panels unfold like a sheet of paper.",
-      "dependencies": ["motion"],
+      "dependencies": [
+        "motion"
+      ],
       "files": [
         {
           "path": "registry/relic/ui/fold-accordion.tsx",
           "type": "registry:ui"
         }
-      ]
-    },
-    {
-      "name": "smooth-caret-input",
-      "type": "registry:ui",
-      "title": "Smooth Caret Input",
-      "description": "A text input whose caret glides between characters as new letters ease in.",
-      "dependencies": ["motion"],
-      "files": [
-        {
-          "path": "registry/relic/ui/smooth-caret-input.tsx",
-          "type": "registry:ui"
-        }
+      ],
+      "categories": [
+        "navigation"
       ]
     },
     {
@@ -73,25 +262,89 @@
       "type": "registry:ui",
       "title": "Perforated Card",
       "description": "A ticket-style card with a stub you tear off to reveal hidden content.",
-      "dependencies": ["motion"],
+      "dependencies": [
+        "motion"
+      ],
       "files": [
         {
           "path": "registry/relic/ui/perforated-card.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "cards"
       ]
     },
     {
-      "name": "shimmer-button",
+      "name": "ticket-toast",
       "type": "registry:ui",
-      "title": "Shimmer Button",
-      "description": "A button with an animated shimmer sweep.",
-      "dependencies": ["motion", "class-variance-authority"],
+      "title": "Ticket Toast",
+      "description": "Notifications shaped like tickets. Dismiss one and its stub tears off.",
+      "categories": [
+        "feedback"
+      ],
+      "dependencies": [
+        "motion"
+      ],
       "files": [
         {
-          "path": "registry/relic/ui/shimmer-button.tsx",
+          "path": "registry/relic/ui/ticket-toast.tsx",
           "type": "registry:ui"
         }
+      ]
+    },
+    {
+      "name": "rewrite-text",
+      "type": "registry:ui",
+      "title": "Rewrite Text",
+      "description": "Text that rewrites itself: the caret selects a word, deletes it and types the next.",
+      "categories": [
+        "effects"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/rewrite-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "caret-field",
+      "type": "registry:ui",
+      "title": "Caret Field",
+      "description": "A background of tiny carets that turn toward the cursor, with an occasional blink.",
+      "categories": [
+        "effects"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/caret-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "elastic-divider",
+      "type": "registry:ui",
+      "title": "Elastic Divider",
+      "description": "A divider line that bends toward the cursor like a string and wobbles back.",
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/elastic-divider.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": [
+        "effects"
       ]
     }
   ]

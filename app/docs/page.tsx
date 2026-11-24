@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { CodeBlock } from "@/components/docs/code-block"
-import { docs } from "@/lib/docs"
+import { docs, docsByCategory } from "@/lib/docs"
 import { siteConfig } from "@/lib/site"
 
 export const metadata: Metadata = {
@@ -35,31 +35,55 @@ export default function DocsIntroduction() {
         className="mt-4"
         code={`npx shadcn@latest add ${siteConfig.url}/r/shimmer-button.json`}
       />
+      <p className="mt-4 text-muted-foreground">
+        Or install straight from GitHub:
+      </p>
+      <CodeBlock
+        className="mt-4"
+        code="npx shadcn@latest add relicui/relic-ui/shimmer-button"
+      />
 
       <h2 className="mt-12 text-xl font-semibold">License</h2>
       <p className="mt-2 text-muted-foreground">
-        Free for personal and commercial projects. Add a visible credit link
-        to {siteConfig.name}, and don&apos;t resell the components or repackage
-        them as your own library.{" "}
+        Open source under the MIT License: free for personal and commercial
+        projects. A credit link to {siteConfig.name} is appreciated, but not
+        required.{" "}
         <Link href="/license" className="text-foreground underline underline-offset-4">
           Read the license
         </Link>
         .
       </p>
 
-      <h2 className="mt-12 text-xl font-semibold">Components</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        {docs.map((doc) => (
-          <Link
-            key={doc.name}
-            href={`/docs/${doc.name}`}
-            className="rounded-lg border p-4 transition-colors hover:bg-muted/50"
-          >
-            <p className="font-medium">{doc.title}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {doc.description}
-            </p>
-          </Link>
+      <h2 className="mt-12 text-xl font-semibold">
+        Components{" "}
+        <span className="font-normal text-muted-foreground">
+          ({docs.length})
+        </span>
+      </h2>
+      <div className="mt-2 space-y-10">
+        {docsByCategory.map((group) => (
+          <section key={group.id} aria-labelledby={`category-${group.id}`}>
+            <h3
+              id={`category-${group.id}`}
+              className="mt-6 font-mono text-xs tracking-wide text-muted-foreground uppercase"
+            >
+              {group.label}
+            </h3>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {group.items.map((doc) => (
+                <Link
+                  key={doc.name}
+                  href={`/docs/${doc.name}`}
+                  className="rounded-lg border p-4 transition-colors hover:bg-muted/50"
+                >
+                  <p className="font-medium">{doc.title}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {doc.description}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </article>

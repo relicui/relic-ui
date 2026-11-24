@@ -1,15 +1,18 @@
 "use client"
 
+/**
+ * Relic UI · Caret Field
+ * https://relic-ui.vercel.app/docs/caret-field
+ *
+ * Copyright (c) 2026 Shubham Tambe
+ * Open source under the MIT License: https://relic-ui.vercel.app/license
+ */
+
 import { useEffect, useRef } from "react"
 import { useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
-const GAP = 28 // distance between carets
-const LENGTH = 7 // caret length at rest
-const RADIUS = 180 // how far the cursor's pull reaches
-const MAX_BLINKS = 5 // gold carets blinking at once
-const BLINK_CHANCE = 0.025 // chance per frame that a new blink starts
 const BLINK_DURATION = 1800 // ms a gold caret stays
 const BLINK_STEP = 350 // ms per on/off step, like a text cursor
 
@@ -24,11 +27,38 @@ function wrapHalfTurn(angle: number) {
 }
 
 /**
- * The Relic UI background: a field of tiny carets (the stem of our logo).
- * They turn toward the cursor like iron filings near a magnet, and now and
- * then one blinks in gold, as if someone is about to type.
+ * A field of tiny carets that turn toward the cursor like iron filings near
+ * a magnet. Now and then one blinks in the accent color, as if someone is
+ * about to type.
  */
-export function CaretField({ className }: { className?: string }) {
+export interface CaretFieldProps {
+  className?: string
+  /** Distance between carets, in pixels. */
+  gap?: number
+  /** Caret length at rest, in pixels. */
+  length?: number
+  /** How far the cursor's pull reaches, in pixels. */
+  radius?: number
+  /** How many carets may blink in the accent color at once. 0 turns it off. */
+  maxBlinks?: number
+  /** Chance per frame that a new blink starts (0–1). */
+  blinkChance?: number
+  /** CSS variable for the resting carets. */
+  colorVar?: string
+  /** CSS variable for the blinking carets. */
+  accentVar?: string
+}
+
+export function CaretField({
+  className,
+  gap: GAP = 28,
+  length: LENGTH = 7,
+  radius: RADIUS = 180,
+  maxBlinks: MAX_BLINKS = 5,
+  blinkChance: BLINK_CHANCE = 0.025,
+  colorVar = "--muted-foreground",
+  accentVar = "--primary",
+}: CaretFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reduceMotion = useReducedMotion()
 
@@ -48,8 +78,8 @@ export function CaretField({ className }: { className?: string }) {
 
     function readColors() {
       const style = getComputedStyle(canvas!)
-      colors.line = style.getPropertyValue("--muted-foreground").trim() || "gray"
-      colors.brand = style.getPropertyValue("--brand").trim() || "orange"
+      colors.line = style.getPropertyValue(colorVar).trim() || "gray"
+      colors.brand = style.getPropertyValue(accentVar).trim() || "orange"
     }
 
     function layout() {
@@ -216,7 +246,7 @@ export function CaretField({ className }: { className?: string }) {
       document.documentElement.removeEventListener("pointerleave", handlePointerLeave)
       document.removeEventListener("visibilitychange", handleVisibility)
     }
-  }, [reduceMotion])
+  }, [reduceMotion, GAP, LENGTH, RADIUS, MAX_BLINKS, BLINK_CHANCE, colorVar, accentVar])
 
   return (
     <canvas

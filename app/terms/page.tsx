@@ -32,9 +32,8 @@ export default function TermsPage() {
         <h2>The components and their license</h2>
         <p>
           Every component is free and can be installed with the shadcn CLI.
-          The components are released under the{" "}
-          <Link href="/license">{name} License</Link>: the MIT License plus an
-          attribution requirement and the Commons Clause. The{" "}
+          The components are open source under the{" "}
+          <Link href="/license">MIT License</Link>. The{" "}
           <Link href="/license">full license text</Link> is what legally
           applies. If anything on this site disagrees with it, the license
           wins.
@@ -42,25 +41,19 @@ export default function TermsPage() {
         <p>In short:</p>
         <ul>
           <li>
-            <strong className="text-foreground">You can</strong> use and change
-            the components in personal and commercial projects, including
-            closed-source and paid apps. Once a component is in your project,
-            that copy is yours to work with.
+            <strong className="text-foreground">You can</strong> use, copy,
+            change and share the components in any project, personal or
+            commercial, including closed-source and paid apps.
           </li>
           <li>
-            <strong className="text-foreground">You must</strong> credit{" "}
-            {name} with a visible link to{" "}
-            <a href={url}>{url.replace(/^https?:\/\//, "")}</a> somewhere users
-            can find it, such as a footer, an about or credits page, or your
-            README. Keep the credit comment and copyright notice in the
-            component source files.
+            <strong className="text-foreground">You must</strong> keep the
+            copyright and license notice if you share the source code itself.
           </li>
           <li>
-            <strong className="text-foreground">You can&apos;t</strong> sell,
-            sublicense or redistribute the components themselves, alone or in
-            a bundle, including ports to other frameworks, or publish them as
-            part of a competing component library, UI kit or template
-            marketplace.
+            <strong className="text-foreground">We&apos;d appreciate</strong>{" "}
+            a credit link to{" "}
+            <a href={url}>{url.replace(/^https?:\/\//, "")}</a>, but it&apos;s
+            not required.
           </li>
         </ul>
       </section>
@@ -78,8 +71,8 @@ export default function TermsPage() {
         <h2>Contributions</h2>
         <p>
           If you contribute to the public repository, you confirm you have the
-          right to do so, and you license your contribution under the same{" "}
-          {name} License as the rest of the project. You keep the copyright to
+          right to do so, and you license your contribution under the MIT
+          License, like the rest of the project. You keep the copyright to
           what you wrote. We may edit, refactor or remove contributions after
           they&apos;re merged.
         </p>

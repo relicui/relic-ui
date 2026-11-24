@@ -64,13 +64,9 @@ export function DeleteProject() {
 
 ## License
 
-Relic UI is **free for personal and commercial projects**, under the [Relic UI License](./LICENSE): the MIT License with an attribution requirement and the Commons Clause.
+Relic UI is **open source** under the [MIT License](./LICENSE). Use it in any project, personal or commercial.
 
-- ✅ Use and change the components in any project, including paid and closed-source apps.
-- ✅ **Credit Relic UI** with a visible link to [relic-ui.vercel.app](https://relic-ui.vercel.app), for example in your footer, about page or README.
-- ❌ Don't sell or redistribute the components themselves, or repackage them as your own component library.
-
-The [LICENSE](./LICENSE) file is what legally applies.
+A credit link to [relic-ui.vercel.app](https://relic-ui.vercel.app) is appreciated, but not required. The Relic UI name and logo are not covered by the license.
 
 ## Run the docs locally
 
