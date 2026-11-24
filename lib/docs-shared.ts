@@ -44,6 +44,25 @@ export const CATEGORIES = [
 
 export type CategoryId = (typeof CATEGORIES)[number]["id"]
 
+/**
+ * Top picks: shown first in the gallery's "All" view, in this order, with a
+ * gold star. The strongest, most original pieces, so first impressions count.
+ */
+export const FEATURED_COMPONENTS = [
+  "vault-code",
+  "crumple-trash",
+  "visitor-map",
+  "heat-mosaic",
+  "profile-deck",
+  "fold-tree",
+  "suggestion-diff",
+  "wax-seal-button",
+  "cohort-tide",
+  "temperature-dial",
+  "follow-button",
+  "scroll-depth",
+]
+
 /** Shown with a "New" badge in the gallery. Remove names as they age. */
 export const NEW_COMPONENTS = new Set([
   "profile-deck",

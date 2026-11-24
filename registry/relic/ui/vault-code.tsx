@@ -70,12 +70,12 @@ function Tumbler({
   return (
     <span
       className={cn(
-        "relative block shrink-0 overflow-hidden rounded-lg border bg-muted/40 transition-colors duration-300",
+        "relative block shrink overflow-hidden rounded-lg border bg-muted/40 transition-colors duration-300",
         active && "border-foreground/40",
         status === "success" && "border-primary/60 bg-primary/10",
         status === "error" && "border-destructive/60 bg-destructive/10"
       )}
-      style={{ width: size.w, height: size.h }}
+      style={{ width: size.w, minWidth: Math.round(size.w * 0.8), height: size.h }}
     >
       {/* The rolling strip of digits, shaded at the edges like a real dial. */}
       <motion.span
@@ -233,11 +233,11 @@ export function VaultCode({
 
   return (
     <MotionConfig reducedMotion="user">
-      <div data-slot="vault-code" className={cn("inline-flex items-center gap-3", className)}>
+      <div data-slot="vault-code" className={cn("inline-flex max-w-full items-center gap-3", className)}>
         {showLock && <Padlock open={status === "success"} status={status} />}
-        <div ref={scope} className={cn("relative flex items-center", s.gap)}>
+        <div ref={scope} className={cn("relative flex min-w-0 items-center", s.gap)}>
           {Array.from({ length }, (_, i) => (
-            <span key={i} className={cn("flex", groupSize > 0 && i > 0 && i % groupSize === 0 && "ml-2")}>
+            <span key={i} className={cn("flex min-w-0 shrink", groupSize > 0 && i > 0 && i % groupSize === 0 && "ml-2")}>
               <Tumbler
                 digit={value[i] === undefined ? null : Number(value[i])}
                 active={i === active}

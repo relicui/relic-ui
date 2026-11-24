@@ -175,12 +175,15 @@ export function AutoStretchTabs() {
   })
 
   return (
-    <StretchTabs
-      aria-label="Dashboard sections"
-      items={TAB_ITEMS}
-      value={tab}
-      onValueChange={setTab}
-    />
+    // On the narrowest phones the row can scroll instead of being cut off.
+    <div className="max-w-full overflow-x-auto p-1 [scrollbar-width:none]">
+      <StretchTabs
+        aria-label="Dashboard sections"
+        items={TAB_ITEMS}
+        value={tab}
+        onValueChange={setTab}
+      />
+    </div>
   )
 }
 
@@ -390,8 +393,11 @@ export function AutoPerforatedCard() {
     }
   })
 
+  // Every other round tears sideways, so both styles get shown.
+  const horizontal = round % 2 === 1
+
   return (
-    <div ref={wrapper} className="w-full max-w-60">
+    <div ref={wrapper} className="w-full max-w-xs">
       <motion.div
         key={round}
         initial={round === 0 ? false : { opacity: 0, y: 10, scale: 0.98 }}
@@ -399,16 +405,30 @@ export function AutoPerforatedCard() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <PerforatedCard
+          orientation={horizontal ? "horizontal" : "vertical"}
           exitEffect="fall"
           onTear={() => (torn.current = true)}
           stub={
-            <div className="flex items-center justify-between text-muted-foreground">
-              <span>Pull to tear</span>
-              <span aria-hidden>↓</span>
-            </div>
+            horizontal ? (
+              <div className="flex h-full flex-col items-center justify-center gap-1 text-center text-xs text-muted-foreground">
+                <span>Pull to tear</span>
+                <span aria-hidden className="text-base">→</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span>Pull to tear</span>
+                <span aria-hidden>↓</span>
+              </div>
+            )
           }
           reveal={
-            <p className="font-mono text-base font-semibold tracking-widest">
+            <p
+              className={
+                horizontal
+                  ? "flex h-full items-center justify-center font-mono text-xs font-semibold tracking-widest"
+                  : "font-mono text-base font-semibold tracking-widest"
+              }
+            >
               RELIC-2026
             </p>
           }

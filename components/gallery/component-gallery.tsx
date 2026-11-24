@@ -17,6 +17,8 @@ export type GalleryItem = {
   category: string
   categoryLabel: string
   isNew: boolean
+  /** A top pick: shown first, with a gold star. */
+  featured?: boolean
   wide: boolean
   /** The live demo, rendered on the server and passed in. */
   preview: React.ReactNode
@@ -129,7 +131,7 @@ export function ComponentGallery({
       </p>
 
       {/* Grid */}
-      <div className="mt-4 grid grid-flow-row-dense gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((item) => (
             <GalleryCard key={item.name} item={item} />
@@ -186,13 +188,14 @@ function GalleryCard({ item }: { item: GalleryItem }) {
         item.wide && "lg:col-span-2"
       )}
     >
-      {/* Live preview */}
-      <div className="relative flex min-h-80 flex-1 items-center justify-center p-8">
+      {/* Live preview. Off-screen previews skip rendering (their space is
+          kept), so scrolling past 58 live demos stays smooth. */}
+      <div className="relative flex min-h-80 flex-1 items-center justify-center p-4 sm:p-8 [contain-intrinsic-size:auto_320px] [content-visibility:auto]">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-t-2xl bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)] opacity-70"
         />
-        <div className="relative flex w-full justify-center">{item.preview}</div>
+        <div className="relative flex w-full min-w-0 justify-center [&>*]:max-w-full [&>*]:min-w-0">{item.preview}</div>
       </div>
 
       {/* Details */}
@@ -205,7 +208,15 @@ function GalleryCard({ item }: { item: GalleryItem }) {
             <Link href={href} className="font-medium hover:underline">
               {item.title}
             </Link>
-            {item.isNew && (
+            {item.featured && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-brand/40 bg-brand/10 px-1.5 py-px font-mono text-[10px] font-medium tracking-wide text-brand uppercase">
+                <svg aria-hidden viewBox="0 0 16 16" className="size-2.5 fill-current">
+                  <path d="M8 1.5l1.9 4 4.4.5-3.3 3 .9 4.3L8 11.1l-3.9 2.2.9-4.3-3.3-3 4.4-.5z" />
+                </svg>
+                Top pick
+              </span>
+            )}
+            {item.isNew && !item.featured && (
               <span className="rounded-full bg-foreground px-1.5 py-px font-mono text-[10px] font-medium tracking-wide text-background uppercase">
                 New
               </span>

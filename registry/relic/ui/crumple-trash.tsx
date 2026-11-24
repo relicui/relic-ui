@@ -46,9 +46,30 @@ export interface CrumpleTrashProps {
 
 type Undo = { item: TrashItem; index: number; key: number }
 
-function Bin({ open, count, showCount }: { open: boolean; count: number; showCount: boolean }) {
+function Bin({ open, count, showCount, hit }: { open: boolean; count: number; showCount: boolean; hit: number }) {
+  const [scope, animate] = useAnimate<HTMLSpanElement>()
+  const reduce = useReducedMotion()
+
+  // Wobble from the impact each time a ball lands (the lid keeps its own bounce).
+  useEffect(() => {
+    if (!hit || reduce || !scope.current) return
+    void animate(scope.current, { rotate: [0, -9, 7, -4, 2, 0], y: [0, 2, 0, 1, 0, 0] }, { duration: 0.5, ease: "easeOut" })
+  }, [hit, reduce, animate, scope])
+
   return (
-    <span className="relative block">
+    <span ref={scope} className="relative block" style={{ transformOrigin: "50% 100%" }}>
+      {/* A puff of specks when a ball lands. */}
+      {hit > 0 &&
+        [-1, -0.35, 0.35, 1].map((d, i) => (
+          <motion.span
+            key={`${hit}-${i}`}
+            aria-hidden
+            className="absolute top-1 left-1/2 size-1 rounded-full bg-muted-foreground/60"
+            initial={{ x: 0, y: 0, opacity: 0.9, scale: 1 }}
+            animate={{ x: d * 14, y: -10 - Math.abs(d) * 4, opacity: 0, scale: 0.4 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+          />
+        ))}
       <svg viewBox="0 0 32 36" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-9 w-8 overflow-visible">
         <motion.g
           style={{ transformBox: "fill-box", transformOrigin: "0% 100%" }}
@@ -111,38 +132,49 @@ function Row({
     const a = card.getBoundingClientRect()
     const b = bin.getBoundingClientRect()
     const ball = 30
+    const sx = ball / a.width
+    const sy = ball / a.height
     const dx = b.left + b.width / 2 - (a.left + a.width / 2)
-    const dy = b.top + b.height * 0.35 - (a.top + a.height / 2)
+    const dy = b.top + b.height * 0.3 - (a.top + a.height / 2)
     const t = 1 / Math.max(speed, 0.1)
     setLifted(true) // fly above the other rows
 
-    // 1. Crumple: the text fades, creases appear, the sheet balls up.
-    void animate(card.querySelectorAll("[data-content]"), { opacity: 0 }, { duration: 0.18 * t })
-    void animate(card.querySelectorAll("[data-crease]"), { opacity: [0, 1] }, { duration: 0.25 * t })
+    // 1. Wind-up and crumple: a small lift, then the sheet balls up as creases appear.
+    void animate(card.querySelectorAll("[data-content]"), { opacity: 0 }, { duration: 0.16 * t, delay: 0.08 * t })
+    void animate(card.querySelectorAll("[data-crease]"), { opacity: [0, 1] }, { duration: 0.3 * t })
     await animate(
       card,
       {
-        scaleX: [1, 0.92, 0.6, ball / a.width],
-        scaleY: [1, 0.7, 0.8, ball / a.height],
-        rotate: [0, -3, 6, 90],
-        borderRadius: ["12px", "18px", "40px", "999px"],
+        scaleX: [1, 1.03, 0.85, 0.5, sx],
+        scaleY: [1, 1.05, 0.62, 0.75, sy],
+        rotate: [0, -1.5, -4, 10, 70],
+        y: [0, -6, 0, -2, -6],
+        borderRadius: ["12px", "12px", "22px", "48px", "999px"],
       },
-      { duration: 0.42 * t, ease: "easeIn" }
+      { duration: 0.5 * t, times: [0, 0.15, 0.45, 0.75, 1], ease: "easeInOut" }
     )
-    // 2. Throw it in an arc into the bin.
+
+    // 2. The throw: a real parabola (steady sideways, gravity downwards),
+    //    spinning and shrinking a little as it flies away.
     onFlying(true)
+    const steps = 28
+    const ts = Array.from({ length: steps + 1 }, (_, i) => i / steps)
+    const lift = arc + Math.max(0, -dy) * 0.5
+    const y0 = -6
     await animate(
       card,
       {
-        x: [0, dx * 0.5, dx],
-        y: [0, Math.min(0, dy) - arc, dy],
-        rotate: [90, 300, 420],
-        scaleX: [ball / a.width, ball / a.width, (ball * 0.6) / a.width],
-        scaleY: [ball / a.height, ball / a.height, (ball * 0.6) / a.height],
+        x: ts.map((s) => dx * s),
+        y: ts.map((s) => y0 + (dy - y0) * s - 4 * lift * s * (1 - s)),
+        rotate: ts.map((s) => 70 + s * 600),
+        scaleX: ts.map((s) => sx * (1 - 0.3 * s * s)),
+        scaleY: ts.map((s) => sy * (1 - 0.3 * s * s)),
       },
-      { duration: 0.55 * t, ease: "linear", times: [0, 0.45, 1] }
+      { duration: (0.45 + Math.min(Math.hypot(dx, dy), 700) / 1500) * t, ease: "linear" }
     )
-    await animate(card, { opacity: 0 }, { duration: 0.08 })
+
+    // 3. Drop in behind the rim.
+    await animate(card, { y: dy + 12, opacity: 0, scaleX: sx * 0.45, scaleY: sy * 0.45 }, { duration: 0.14 * t, ease: "easeIn" })
     onFlying(false)
     onThrown(item, index)
   }
@@ -217,6 +249,8 @@ export function CrumpleTrash({
   const binRef = useRef<HTMLButtonElement>(null)
   const [flying, setFlying] = useState(0)
   const [count, setCount] = useState(0)
+  // Counts landings, so the bin wobbles each time a ball drops in.
+  const [hits, setHits] = useState(0)
   const [undo, setUndo] = useState<Undo | null>(null)
   const [announce, setAnnounce] = useState("")
   const timer = useRef<number | undefined>(undefined)
@@ -226,6 +260,7 @@ export function CrumpleTrash({
   function thrown(item: TrashItem, index: number) {
     onDelete(item)
     setCount((c) => c + 1)
+    setHits((h) => h + 1)
     setAnnounce(`Moved ${item.title} to the trash.${onRestore && undoSeconds > 0 ? " Undo is available." : ""}`)
     if (onRestore && undoSeconds > 0) {
       window.clearTimeout(timer.current)
@@ -255,7 +290,7 @@ export function CrumpleTrash({
         flying > 0 && "text-foreground"
       )}
     >
-      <Bin open={flying > 0} count={count} showCount={showCount} />
+      <Bin open={flying > 0} count={count} showCount={showCount} hit={hits} />
     </button>
   )
 

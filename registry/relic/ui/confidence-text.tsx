@@ -109,7 +109,7 @@ export function ConfidenceText({
                 {showTooltip && low && (
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 translate-y-1 rounded-md bg-foreground px-1.5 py-0.5 font-mono text-[10px] whitespace-nowrap text-background opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 translate-y-1 rounded-md bg-foreground px-1.5 py-0.5 font-mono text-[10px] whitespace-nowrap text-background opacity-0 transition-[background-color,color,text-decoration-color,opacity,box-shadow] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
                   >
                     {percent}% sure
                   </span>

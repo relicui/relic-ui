@@ -223,11 +223,15 @@ export function CohortTide({
                     {has && fill === "tide" && (
                       <motion.span
                         aria-hidden
-                        className="absolute inset-x-0 bottom-0"
-                        style={{ background: tone(v, scale, 70) }}
-                        initial={animate ? { height: "0%" } : false}
-                        whileInView={{ height: pct(v) }}
-                        viewport={{ once: true }}
+                        className="absolute inset-0"
+                        {...(animate
+                          ? {
+                              style: { background: tone(v, scale, 70) },
+                              initial: { y: "100%" },
+                              whileInView: { y: `${(1 - v) * 100}%` },
+                              viewport: { once: true },
+                            }
+                          : { style: { background: tone(v, scale, 70), y: `${(1 - v) * 100}%` } })}
                         transition={{ duration: 0.9, delay: (r + c) * 0.04, ease: [0.22, 1, 0.36, 1] }}
                       >
                         {v > 0.04 && v < 0.98 && <Wave color={tone(v, scale, 70)} />}

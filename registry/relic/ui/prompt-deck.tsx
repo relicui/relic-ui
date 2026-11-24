@@ -8,7 +8,7 @@
  * Open source under the MIT License: https://relic-ui.vercel.app/license
  */
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { MotionConfig, motion, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -56,6 +56,17 @@ export function PromptDeck({
   const [hovered, setHovered] = useState<number | null>(null)
   const [picked, setPicked] = useState<number | null>(null)
   const [paused, setPaused] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
+  const [room, setRoom] = useState(0)
+
+  // Measure the space, so the fan can fit narrow screens.
+  useEffect(() => {
+    const el = listRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => setRoom(Math.round(entry.contentRect.width)))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [layout])
 
   const shuffle = () => setOrder((o) => [...o.slice(1), o[0]])
 
@@ -111,6 +122,11 @@ export function PromptDeck({
   const n = visible.length
   const mid = (n - 1) / 2
 
+  // On narrow screens the cards get a little narrower and fan out less, so the
+  // whole hand always fits. (30px covers the corners of the tilted cards.)
+  const w = room ? Math.min(cardWidth, Math.max(120, room - 12)) : cardWidth
+  const spread = room && mid > 0 ? Math.min(0.42, Math.max(0.08, (room - w - 30) / (2 * mid * w))) : 0.42
+
   return (
     <MotionConfig reducedMotion="user">
       <div
@@ -122,11 +138,11 @@ export function PromptDeck({
           setHovered(null)
         }}
       >
-        <div role="list" className="relative h-52 w-full" style={{ maxWidth: cardWidth * (layout === "fan" ? 2.4 : 1.4) }}>
+        <div ref={listRef} role="list" className="relative h-52 w-full" style={{ maxWidth: cardWidth * (layout === "fan" ? 2.4 : 1.4) }}>
           {visible.map((index, k) => {
             const lifted = hovered === index
             const fan = {
-              x: (k - mid) * cardWidth * 0.42,
+              x: (k - mid) * w * spread,
               y: lifted ? -18 : Math.abs(k - mid) * 9,
               rotate: lifted ? 0 : (k - mid) * 7,
               scale: lifted ? 1.05 : 1,
@@ -158,7 +174,7 @@ export function PromptDeck({
                 }}
                 transition={{ type: "spring", stiffness: 320, damping: 26 }}
                 className={cn(cardClass, "absolute top-4 left-1/2 h-36", !interactive && "pointer-events-none")}
-                style={{ width: cardWidth, marginLeft: -cardWidth / 2 }}
+                style={{ width: w, marginLeft: -w / 2 }}
               >
                 {card(index)}
               </motion.button>

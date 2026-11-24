@@ -97,17 +97,19 @@ export function CodeBlock({
               exit={{ opacity: 0, transition: { duration: 0.35 } }}
             >
               <motion.div
-                className="absolute inset-y-0 left-0 bg-brand/10"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
+                className="absolute inset-0 origin-left bg-brand/10"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
                 transition={{ duration: 0.5, ease: EASE }}
               />
               <motion.div
-                className="absolute inset-y-2 w-0.5 -translate-x-full rounded-full bg-brand"
-                initial={{ left: "0%", opacity: 1 }}
-                animate={{ left: "100%", opacity: [1, 1, 0] }}
+                className="absolute inset-y-2 inset-x-0"
+                initial={{ x: "0%", opacity: 1 }}
+                animate={{ x: "100%", opacity: [1, 1, 0] }}
                 transition={{ duration: 0.5, ease: EASE }}
-              />
+              >
+                <span className="absolute inset-y-0 left-0 w-0.5 -translate-x-full rounded-full bg-brand" />
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

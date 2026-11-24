@@ -100,10 +100,10 @@ export function EtchSkeleton({
             >
               {!reduceMotion && (
                 <motion.div
-                  className="absolute inset-y-0 left-0 bg-foreground/10"
-                  initial={{ width: "0%" }}
+                  className="absolute inset-0 origin-left bg-foreground/10"
+                  initial={{ scaleX: 0 }}
                   animate={{
-                    width: ["0%", "0%", "100%", "100%", "100%"],
+                    scaleX: [0, 0, 1, 1, 1],
                     opacity: [1, 1, 1, 1, 0],
                   }}
                   transition={{

@@ -8,7 +8,7 @@
  * Open source under the MIT License: https://relic-ui.vercel.app/license
  */
 
-import { useMemo, useState } from "react"
+import { useId, useMemo, useState } from "react"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -30,6 +30,8 @@ export interface VisitorCountProps {
   /** Float a small dot up for every new arrival. */
   showArrivals?: boolean
   showSparkline?: boolean
+  /** How a point in history is described on hover. Defaults to one point per minute. */
+  pointLabel?: (index: number, count: number) => string
   /** Short numbers like 12.4K. */
   compact?: boolean
   locale?: string
@@ -58,21 +60,156 @@ function Digit({ n }: { n: number }) {
   )
 }
 
-function Sparkline({ values }: { values: number[] }) {
-  const { line, area, last } = useMemo(() => {
+const W = 100
+const H = 40
+const PAD = 5
+
+/**
+ * A smooth curve through the points that never overshoots them
+ * (monotone cubic interpolation), so a dip never looks deeper than it was.
+ */
+function smoothPath(p: { x: number; y: number }[]) {
+  const n = p.length
+  if (n < 2) return ""
+  const m: number[] = []
+  for (let i = 0; i < n - 1; i++) m.push((p[i + 1].y - p[i].y) / (p[i + 1].x - p[i].x || 1))
+  const t: number[] = [m[0]]
+  for (let i = 1; i < n - 1; i++) t.push(m[i - 1] * m[i] <= 0 ? 0 : (m[i - 1] + m[i]) / 2)
+  t.push(m[n - 2])
+  for (let i = 0; i < n - 1; i++) {
+    if (m[i] === 0) {
+      t[i] = 0
+      t[i + 1] = 0
+      continue
+    }
+    const a = t[i] / m[i]
+    const b = t[i + 1] / m[i]
+    const s = a * a + b * b
+    if (s > 9) {
+      const k = 3 / Math.sqrt(s)
+      t[i] = k * a * m[i]
+      t[i + 1] = k * b * m[i]
+    }
+  }
+  let d = `M${p[0].x.toFixed(2)} ${p[0].y.toFixed(2)}`
+  for (let i = 0; i < n - 1; i++) {
+    const h = (p[i + 1].x - p[i].x) / 3
+    d += ` C${(p[i].x + h).toFixed(2)} ${(p[i].y + t[i] * h).toFixed(2)} ${(p[i + 1].x - h).toFixed(2)} ${(p[i + 1].y - t[i + 1] * h).toFixed(2)} ${p[i + 1].x.toFixed(2)} ${p[i + 1].y.toFixed(2)}`
+  }
+  return d
+}
+
+function Sparkline({
+  values,
+  locale,
+  pointLabel,
+}: {
+  values: number[]
+  locale?: string
+  pointLabel: (index: number, count: number) => string
+}) {
+  const id = useId()
+  const [hover, setHover] = useState<number | null>(null)
+  const { pts, line, area, peak } = useMemo(() => {
     const min = Math.min(...values)
     const max = Math.max(...values)
     const range = max - min || 1
-    const pts = values.map((v, i) => [(i / Math.max(values.length - 1, 1)) * 100, 28 - ((v - min) / range) * 24] as const)
-    const line = pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`).join(" ")
-    return { line, area: `${line} L100 32 L0 32 Z`, last: pts[pts.length - 1] }
+    const pts = values.map((v, i) => ({ x: (i / Math.max(values.length - 1, 1)) * W, y: PAD + (1 - (v - min) / range) * (H - PAD * 2) }))
+    const line = smoothPath(pts)
+    return { pts, line, area: `${line} L${W} ${H} L0 ${H} Z`, peak: max }
   }, [values])
+
+  const last = pts[pts.length - 1]
+  const shown = hover !== null ? hover : null
+  const at = (p: { x: number; y: number }) => ({ left: `${(p.x / W) * 100}%`, top: `${(p.y / H) * 100}%` })
+
   return (
-    <svg aria-hidden viewBox="0 0 100 32" preserveAspectRatio="none" className="h-10 w-full overflow-visible">
-      <path d={area} className="fill-primary/10" />
-      <path d={line} fill="none" className="stroke-primary" strokeWidth={1.5} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
-      {last && <circle cx={last[0]} cy={last[1]} r={2.2} className="fill-brand" vectorEffect="non-scaling-stroke" />}
-    </svg>
+    <div className="flex flex-col gap-1">
+      <div
+        className="relative h-14 w-full cursor-crosshair"
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect()
+          const i = Math.round(((e.clientX - r.left) / r.width) * (values.length - 1))
+          setHover(Math.min(values.length - 1, Math.max(0, i)))
+        }}
+        onPointerLeave={() => setHover(null)}
+      >
+        <svg aria-hidden viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible">
+          <defs>
+            <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" style={{ stopColor: "var(--primary)", stopOpacity: 0.22 }} />
+              <stop offset="100%" style={{ stopColor: "var(--primary)", stopOpacity: 0 }} />
+            </linearGradient>
+          </defs>
+          {/* A faint baseline and midline for scale. */}
+          <line x1="0" x2={W} y1={H - 0.5} y2={H - 0.5} className="stroke-border" vectorEffect="non-scaling-stroke" />
+          <line x1="0" x2={W} y1={H / 2} y2={H / 2} className="stroke-border" strokeDasharray="2 3" vectorEffect="non-scaling-stroke" />
+          <motion.path
+            initial={false}
+            animate={{ d: area }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            fill={`url(#${id}-fill)`}
+          />
+          <motion.path
+            initial={false}
+            animate={{ d: line }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            fill="none"
+            className="stroke-primary"
+            strokeWidth={1.75}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+          {shown !== null && (
+            <line
+              x1={pts[shown].x}
+              x2={pts[shown].x}
+              y1={0}
+              y2={H}
+              className="stroke-foreground/30"
+              strokeDasharray="2 2"
+              vectorEffect="non-scaling-stroke"
+            />
+          )}
+        </svg>
+
+        {/* Dots are HTML so they stay round however wide the graph is. */}
+        {last && (
+          <motion.span
+            aria-hidden
+            className="absolute size-2 -translate-x-1/2 -translate-y-1/2"
+            initial={false}
+            animate={at(last)}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="absolute inset-0 animate-ping rounded-full bg-brand/60 motion-reduce:hidden" />
+            <span className="absolute inset-0 rounded-full bg-brand ring-2 ring-background" />
+          </motion.span>
+        )}
+        {shown !== null && (
+          <>
+            <span aria-hidden className="absolute size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground ring-2 ring-background" style={at(pts[shown])} />
+            <span
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute -top-1 -translate-y-full rounded-md border bg-popover px-2 py-0.5 text-[11px] whitespace-nowrap text-popover-foreground shadow-sm",
+                pts[shown].x < W * 0.2 ? "translate-x-0" : pts[shown].x > W * 0.8 ? "-translate-x-full" : "-translate-x-1/2"
+              )}
+              style={{ left: `${(pts[shown].x / W) * 100}%` }}
+            >
+              <span className="font-mono font-semibold">{values[shown].toLocaleString(locale)}</span>
+              <span className="text-muted-foreground"> · {pointLabel(shown, values.length)}</span>
+            </span>
+          </>
+        )}
+      </div>
+      <div aria-hidden className="flex justify-between font-mono text-[10px] text-muted-foreground">
+        <span>{pointLabel(0, values.length)}</span>
+        <span>peak {peak.toLocaleString(locale)}</span>
+        <span>now</span>
+      </div>
+    </div>
   )
 }
 
@@ -91,6 +228,7 @@ export function VisitorCount({
   showDelta = true,
   showArrivals = true,
   showSparkline = true,
+  pointLabel = (i, n) => (i === n - 1 ? "now" : `${n - 1 - i} min ago`),
   compact = false,
   locale,
   size = "md",
@@ -184,7 +322,7 @@ export function VisitorCount({
           )}
         </div>
 
-        {showSparkline && history && history.length > 1 && <Sparkline values={history} />}
+        {showSparkline && history && history.length > 1 && <Sparkline values={history} locale={locale} pointLabel={pointLabel} />}
       </div>
     </MotionConfig>
   )

@@ -67,8 +67,8 @@ function hourTick(h: number, format: "24h" | "12h") {
   return `${h % 12 === 0 ? 12 : h % 12}${h < 12 ? "a" : "p"}`
 }
 
-/** Bars that grow in when seen, or just sit at their size. */
-function grow(prop: "width" | "height", size: string, animate: boolean) {
+/** Bars that grow in when seen (by scaling, which stays smooth), or just sit at their size. */
+function grow(prop: "scaleX" | "scaleY", size: number, animate: boolean) {
   return animate
     ? { initial: { [prop]: 0 }, whileInView: { [prop]: size }, viewport: { once: true } }
     : { style: { [prop]: size } }
@@ -256,8 +256,8 @@ export function WeekPulse({
               {showTotals && (
                 <span aria-hidden className="flex items-center gap-1.5 pl-1">
                   <motion.span
-                    className={cn("h-1.5 rounded-full", active?.d === d ? "bg-foreground" : "bg-muted-foreground/40")}
-                    {...grow("width", `${(stats.dayTotals[d] / stats.maxDay) * 100}%`, animate)}
+                    className={cn("h-1.5 w-full origin-left rounded-full", active?.d === d ? "bg-foreground" : "bg-muted-foreground/40")}
+                    {...grow("scaleX", stats.dayTotals[d] / stats.maxDay, animate)}
                     transition={{ delay: 0.3 + d * 0.04, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   />
                 </span>
@@ -271,8 +271,8 @@ export function WeekPulse({
               {stats.hourTotals.map((total, h) => (
                 <span key={h} className="flex h-7 items-start justify-center">
                   <motion.span
-                    className={cn("w-full max-w-2 rounded-full", active?.h === h ? "bg-foreground" : "bg-muted-foreground/40")}
-                    {...grow("height", `${Math.max(8, (total / stats.maxHour) * 100)}%`, animate)}
+                    className={cn("h-full w-full max-w-2 origin-top rounded-full", active?.h === h ? "bg-foreground" : "bg-muted-foreground/40")}
+                    {...grow("scaleY", Math.max(0.08, total / stats.maxHour), animate)}
                     transition={{ delay: 0.3 + h * 0.015, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   />
                 </span>

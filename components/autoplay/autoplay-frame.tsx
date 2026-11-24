@@ -84,7 +84,7 @@ export function AutoplayFrame({
       onPointerLeave={() => setHovered(false)}
       onPointerDown={engage}
       onKeyDown={engage}
-      className={cn("flex w-full justify-center", className)}
+      className={cn("flex w-full min-w-0 justify-center [&>*]:max-w-full [&>*]:min-w-0", className)}
     >
       <AutoplayContext.Provider value={active}>{children}</AutoplayContext.Provider>
     </div>

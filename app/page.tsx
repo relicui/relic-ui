@@ -10,14 +10,9 @@ import {
   SlidersHorizontal,
 } from "lucide-react"
 
-import {
-  AutoElasticDivider,
-  AutoFoldAccordion,
-  AutoHoldToConfirm,
-  AutoPerforatedCard,
-  AutoSmoothCaretInput,
-  AutoStretchTabs,
-} from "@/components/autoplay/auto-demos"
+import { AutoDialNumberInput, AutoPerforatedCard } from "@/components/autoplay/auto-demos"
+import { AutoFoldTree, AutoVaultCode } from "@/components/autoplay/auto-demos-data"
+import { AutoProfileDeck } from "@/components/autoplay/auto-demos-social"
 import { AutoplayFrame } from "@/components/autoplay/autoplay-frame"
 import { BrowseButton } from "@/components/browse-button"
 import { HeroAssembly } from "@/components/landing/hero-assembly"
@@ -28,11 +23,14 @@ import { SiteHeader } from "@/components/site-header"
 import { docs } from "@/lib/docs"
 import { siteConfig } from "@/lib/site"
 import { cn } from "@/lib/utils"
+import PerforationProgressDemo from "@/registry/relic/examples/perforation-progress-demo"
+import PromptDeckDemo from "@/registry/relic/examples/prompt-deck-demo"
+import VisitorCountDemo from "@/registry/relic/examples/visitor-count-demo"
+import VisitorMapDemo from "@/registry/relic/examples/visitor-map-demo"
 import { CaretField } from "@/registry/relic/ui/caret-field"
 import { ElasticDivider } from "@/registry/relic/ui/elastic-divider"
 import { PerforatedCard } from "@/registry/relic/ui/perforated-card"
 import { RewriteText } from "@/registry/relic/ui/rewrite-text"
-import { ShimmerButton } from "@/registry/relic/ui/shimmer-button"
 
 const HERO_WORDS = ["alive", "tactile", "crafted", "human", "yours"]
 
@@ -76,12 +74,12 @@ function Tile({
         className
       )}
     >
-      <div className="relative flex min-h-80 flex-1 items-center justify-center p-8">
+      <div className="relative flex min-h-80 flex-1 items-center justify-center p-4 sm:p-8">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)] opacity-70"
         />
-        <div className="relative flex w-full justify-center">{children}</div>
+        <div className="relative flex w-full min-w-0 justify-center [&>*]:max-w-full [&>*]:min-w-0">{children}</div>
       </div>
       <div className="flex items-end justify-between gap-4 border-t px-5 py-4">
         <div className="min-w-0">
@@ -132,7 +130,7 @@ const details = [
   {
     icon: ShieldCheck,
     title: "No tracking",
-    body: "No accounts, ads, analytics or cookies on this site. The registry is just static files.",
+    body: "No accounts, ads or cookies. Just anonymous visit counts that never follow you to other sites. The registry is static files.",
   },
 ]
 
@@ -225,16 +223,14 @@ export default function Page() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Tile
-              name="smooth-caret-input"
-              title="Smooth Caret Input"
-              description="The caret glides. Letters ease in and out."
-              className="lg:col-span-2"
+              name="visitor-map"
+              title="Visitor Map"
+              description="Who's here right now, pinging live across a dotted world."
+              className="md:col-span-2"
             >
-              <AutoplayFrame>
-                <AutoSmoothCaretInput />
-              </AutoplayFrame>
+              <VisitorMapDemo />
             </Tile>
 
             <Tile
@@ -249,57 +245,71 @@ export default function Page() {
             </Tile>
 
             <Tile
-              name="hold-to-confirm-button"
-              title="Hold to Confirm"
-              description="No more accidental deletes."
+              name="vault-code"
+              title="Vault Code"
+              description="A code input made of lock dials. Get it right and the padlock opens."
             >
               <AutoplayFrame>
-                <AutoHoldToConfirm />
+                <AutoVaultCode />
               </AutoplayFrame>
             </Tile>
 
             <Tile
-              name="stretch-tabs"
-              title="Stretch Tabs"
-              description="The indicator stretches as it travels."
+              name="profile-deck"
+              title="Profile Deck"
+              description="Every profile you have, dealt like a deck of cards."
             >
               <AutoplayFrame>
-                <AutoStretchTabs />
+                <AutoProfileDeck />
               </AutoplayFrame>
             </Tile>
 
             <Tile
-              name="fold-accordion"
-              title="Fold Accordion"
-              description="Panels unfold like paper."
-              className="lg:col-span-2"
+              name="fold-tree"
+              title="Fold Tree"
+              description="Folders unfold like paper; a gold thread marks your place."
             >
               <AutoplayFrame>
-                <AutoFoldAccordion />
+                <AutoFoldTree />
               </AutoplayFrame>
             </Tile>
 
             <Tile
-              name="elastic-divider"
-              title="Elastic Divider"
-              description="Pluck the line with your cursor."
+              name="dial-number-input"
+              title="Dial Number Input"
+              description="Spin a number like a combination lock."
             >
               <AutoplayFrame>
-                <AutoElasticDivider />
+                <AutoDialNumberInput />
               </AutoplayFrame>
             </Tile>
 
             <Tile
-              name="shimmer-button"
-              title="Shimmer Button"
-              description="A quiet sweep of light."
+              name="perforation-progress"
+              title="Perforation Progress"
+              description="Progress drawn as a tear line that ripples when done."
             >
-              <ShimmerButton>
-                Get started <ArrowRight />
-              </ShimmerButton>
+              <PerforationProgressDemo />
             </Tile>
 
-            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-dashed p-8 lg:col-span-2">
+            <Tile
+              name="prompt-deck"
+              title="Prompt Deck"
+              description="Starter prompts dealt like cards. Pick one to fill the box."
+              className="md:col-span-2"
+            >
+              <PromptDeckDemo />
+            </Tile>
+
+            <Tile
+              name="visitor-count"
+              title="Visitor Count"
+              description="People here now, with a heartbeat that quickens with traffic."
+            >
+              <VisitorCountDemo />
+            </Tile>
+
+            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-dashed p-8 md:col-span-2 lg:col-span-3">
               <div>
                 <p className="text-lg font-medium">More relics on the way.</p>
                 <p className="mt-1 max-w-md text-sm text-muted-foreground">

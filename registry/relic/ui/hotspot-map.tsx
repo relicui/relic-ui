@@ -202,7 +202,10 @@ export function HotspotMap({
     const canvas = canvasRef.current
     const wrap = wrapRef.current
     if (!canvas || !wrap || !size.w || !size.h) return
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    // Heat is soft anyway, so it's drawn at half resolution and scaled up:
+    // a quarter of the pixels to recolor, which keeps replay smooth.
+    // Crisp dots need full resolution.
+    const dpr = showPoints ? Math.min(window.devicePixelRatio || 1, 2) : 0.5
     const W = Math.round(size.w * dpr)
     const H = Math.round(size.h * dpr)
     if (canvas.width !== W) canvas.width = W
@@ -212,7 +215,7 @@ export function HotspotMap({
     ctx.clearRect(0, 0, W, H)
     const r = Math.max(2, Math.round(radius * dpr))
     const brush = makeBrush(r)
-    const visible = timeline.list.filter((p) => p.t <= cutoff + 1e-9)
+    const visible = timeline.list.slice(0, count) // the list is in time order
     for (const p of visible) {
       ctx.globalAlpha = Math.min(1, Math.max(0.01, intensity * (p.weight ?? 1)))
       ctx.drawImage(brush, p.x * W - r, p.y * H - r)
@@ -244,7 +247,8 @@ export function HotspotMap({
         ctx.stroke()
       }
     }
-  }, [size, timeline, cutoff, radius, intensity, palette, showPoints, theme])
+    // Redraws only when a click appears or disappears, not on every frame.
+  }, [size, timeline, count, radius, intensity, palette, showPoints, theme])
 
   const legend = palette === "heat" ? HEAT : palette === "brand" ? ["transparent", "var(--brand)"] : ["transparent", "currentColor"]
 

@@ -10,7 +10,7 @@ import {
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { categoryLabel, docs, docsByCategory } from "@/lib/docs"
-import { NEW_COMPONENTS, WIDE_COMPONENTS } from "@/lib/docs-shared"
+import { FEATURED_COMPONENTS, NEW_COMPONENTS, WIDE_COMPONENTS } from "@/lib/docs-shared"
 import { siteConfig } from "@/lib/site"
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function ComponentsPage() {
   // The demos render here on the server and are handed to the gallery,
   // so the filtering code stays small.
-  const items: GalleryItem[] = docsByCategory.flatMap((group) =>
+  const byCategory: GalleryItem[] = docsByCategory.flatMap((group) =>
     group.items.map(({ name, title, description, category, Demo }) => {
       // Prefer the self-playing version, so visitors see it move on its own.
       const Preview = autoDemos[name] ?? Demo
@@ -32,6 +32,7 @@ export default function ComponentsPage() {
         category,
         categoryLabel: categoryLabel(category),
         isNew: NEW_COMPONENTS.has(name),
+        featured: FEATURED_COMPONENTS.includes(name),
         wide: WIDE_COMPONENTS.has(name),
         preview: (
           <AutoplayFrame>
@@ -41,6 +42,16 @@ export default function ComponentsPage() {
       }
     })
   )
+
+  // Top picks first (in their own order), then everything else by category.
+  const rank = (name: string) => {
+    const i = FEATURED_COMPONENTS.indexOf(name)
+    return i === -1 ? Infinity : i
+  }
+  const items = [
+    ...byCategory.filter((item) => item.featured).sort((a, b) => rank(a.name) - rank(b.name)),
+    ...byCategory.filter((item) => !item.featured),
+  ]
 
   const categories = docsByCategory.map(({ id, label, items }) => ({
     id,

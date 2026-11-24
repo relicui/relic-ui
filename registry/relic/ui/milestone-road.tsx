@@ -100,15 +100,15 @@ export function MilestoneRoad({
 
   return (
     <MotionConfig reducedMotion="user">
-      <div data-slot="milestone-road" className={cn("w-full px-4", className)}>
+      <div data-slot="milestone-road" className={cn("w-full overflow-x-clip px-4", className)}>
         <div className="relative h-28">
           {/* The road: walked part in gold, the rest dashed. */}
           <span aria-hidden className="absolute inset-x-0 top-14 h-0 border-t-2 border-dashed border-muted-foreground/30" />
           <motion.span
             aria-hidden
-            className="absolute top-[54px] left-0 h-[3px] origin-left rounded-full bg-brand"
-            initial={{ width: "0%" }}
-            whileInView={{ width: `${model.at * 100}%` }}
+            className="absolute inset-x-0 top-[54px] h-[3px] origin-left rounded-full bg-brand"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: model.at }}
             viewport={{ once: true }}
             transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
           />
@@ -163,22 +163,23 @@ export function MilestoneRoad({
           </ol>
 
           {/* The traveller */}
-          <motion.span
+          {/* A full-width rail slides right; the traveller rides its left edge. */}
+          <motion.div
             aria-hidden
-            className="absolute top-[38px] z-10 -translate-x-1/2"
-            initial={{ left: "0%" }}
-            whileInView={{ left: `${model.at * 100}%` }}
+            className="pointer-events-none absolute inset-x-0 top-[38px] z-10"
+            initial={{ x: "0%" }}
+            whileInView={{ x: `${model.at * 100}%` }}
             viewport={{ once: true }}
             transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.span
-              className="flex size-8 items-center justify-center overflow-hidden rounded-full border-2 border-brand bg-background text-[11px] font-semibold shadow-md"
+              className="absolute left-0 flex size-8 -translate-x-1/2 items-center justify-center overflow-hidden rounded-full border-2 border-brand bg-background text-[11px] font-semibold shadow-md"
               animate={{ y: [0, -3, 0] }}
               transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
             >
               {marker ?? compact(count)}
             </motion.span>
-          </motion.span>
+          </motion.div>
         </div>
 
         {next !== undefined && (

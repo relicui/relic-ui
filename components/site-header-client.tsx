@@ -145,7 +145,7 @@ export function SiteHeaderClient({ stars }: { stars: number | null }) {
             className="hidden h-9 items-center gap-2 rounded-full border bg-muted/40 pr-1.5 pl-3.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
           >
             <Search className="size-3.5" />
-            <span className="pr-4">Search components</span>
+            <span className="pr-4 whitespace-nowrap"><span className="lg:hidden">Search</span><span className="hidden lg:inline">Search components</span></span>
             <kbd className="rounded-full border bg-background px-1.5 font-mono text-[10px]">
               /
             </kbd>

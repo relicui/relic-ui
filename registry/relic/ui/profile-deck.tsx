@@ -153,7 +153,8 @@ function Card({ profile, name, avatar, tint }: { profile: SocialProfile; name?: 
           </a>
         )}
       </div>
-      <div className="-mt-7 flex flex-1 flex-col gap-2 px-4 pb-4">
+      {/* relative: keeps the avatar above the colored band it overlaps. */}
+      <div className="relative -mt-7 flex flex-1 flex-col gap-2 px-4 pb-4">
         <span className="flex size-14 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-muted text-base font-semibold">
           {pic ? (
             // eslint-disable-next-line @next/next/no-img-element

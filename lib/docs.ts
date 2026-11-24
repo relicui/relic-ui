@@ -438,6 +438,18 @@ const extras: Record<string, DocExtras> = {
         description: "Content revealed once the stub is torn off.",
       },
       {
+        name: "orientation",
+        type: '"vertical" | "horizontal"',
+        default: '"vertical"',
+        description: "Stub below, pulled down to tear, or stub on the right like a cinema ticket, pulled sideways.",
+      },
+      {
+        name: "stubSize",
+        type: "number | string",
+        default: '"36%"',
+        description: "Width of the stub in horizontal cards.",
+      },
+      {
         name: "threshold",
         type: "number",
         default: "70",
