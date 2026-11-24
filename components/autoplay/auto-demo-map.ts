@@ -14,6 +14,27 @@ import {
   AutoStretchSwitch,
   AutoStretchTabs,
 } from "@/components/autoplay/auto-demos"
+import {
+  AutoAstrolabe,
+  AutoCitationPeek,
+  AutoJellyCard,
+  AutoOrbitMenu,
+  AutoPullChain,
+  AutoResponseVersions,
+  AutoScrollUnroll,
+  AutoSpringSlider,
+  AutoSuggestionDiff,
+  AutoTemperatureDial,
+  AutoThoughtFold,
+  AutoWaxSeal,
+} from "@/components/autoplay/auto-demos-themes"
+import {
+  AutoCrumpleTrash,
+  AutoFoldTree,
+  AutoPaperDrop,
+  AutoVaultCode,
+  AutoWeekPulse,
+} from "@/components/autoplay/auto-demos-data"
 
 /**
  * Self-playing demos by component name, for the landing page and gallery.
@@ -33,4 +54,21 @@ export const autoDemos: Record<string, ComponentType> = {
   "perforated-card": AutoPerforatedCard,
   "elastic-divider": AutoElasticDivider,
   "caret-field": AutoCaretField,
+  "suggestion-diff": AutoSuggestionDiff,
+  "thought-fold": AutoThoughtFold,
+  "wax-seal-button": AutoWaxSeal,
+  "scroll-unroll": AutoScrollUnroll,
+  "astrolabe-picker": AutoAstrolabe,
+  "spring-slider": AutoSpringSlider,
+  "pull-chain-toggle": AutoPullChain,
+  "jelly-card": AutoJellyCard,
+  "orbit-menu": AutoOrbitMenu,
+  "temperature-dial": AutoTemperatureDial,
+  "citation-peek": AutoCitationPeek,
+  "response-versions": AutoResponseVersions,
+  "paper-drop": AutoPaperDrop,
+  "fold-tree": AutoFoldTree,
+  "vault-code": AutoVaultCode,
+  "crumple-trash": AutoCrumpleTrash,
+  "week-pulse": AutoWeekPulse,
 }

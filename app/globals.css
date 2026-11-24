@@ -290,3 +290,24 @@ html.lenis body {
 .lenis.lenis-smooth iframe {
     pointer-events: none;
 }
+
+/* The GitHub star in the navbar: always lit, with a slow twinkle. */
+@keyframes star-twinkle {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--brand)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 7px var(--brand)) drop-shadow(0 0 2px var(--brand)); transform: scale(1.12); }
+}
+
+/* The GitHub logo's "signal": calm most of the time, then a quick double
+   blink of gold light with a ring pulsing out behind it. */
+@keyframes signal-blink {
+    0%, 78%, 100% { color: inherit; filter: none; transform: scale(1); }
+    81% { color: var(--brand); filter: drop-shadow(0 0 6px var(--brand)); transform: scale(1.18); }
+    84% { color: inherit; filter: none; transform: scale(1); }
+    87% { color: var(--brand); filter: drop-shadow(0 0 8px var(--brand)); transform: scale(1.18); }
+    92% { color: inherit; filter: none; transform: scale(1); }
+}
+@keyframes signal-ring {
+    0%, 80% { opacity: 0; transform: scale(0.6); }
+    82% { opacity: 0.7; transform: scale(0.8); }
+    100% { opacity: 0; transform: scale(2.6); }
+}

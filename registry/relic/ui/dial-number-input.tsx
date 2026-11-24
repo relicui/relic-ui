@@ -188,7 +188,13 @@ export function DialNumberInput({
             onKeyDown={handleKeyDown}
             onPointerDown={(e) => {
               if (disabled) return
-              e.currentTarget.setPointerCapture(e.pointerId)
+              // Capturing can fail (e.g. for a simulated or already-ended pointer);
+              // the component still works without it.
+              try {
+                e.currentTarget.setPointerCapture(e.pointerId)
+              } catch {
+                // not capturable, carry on
+              }
               e.currentTarget.focus()
               drag.current = { y: e.clientY, value }
             }}

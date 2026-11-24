@@ -346,6 +346,546 @@
       "categories": [
         "effects"
       ]
+    },
+    {
+      "name": "suggestion-diff",
+      "type": "registry:ui",
+      "title": "Suggestion Diff",
+      "description": "AI edits shown inside the text: removed words strike through, new words type in, accept or reject in place.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/suggestion-diff.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "thought-fold",
+      "type": "registry:ui",
+      "title": "Thought Fold",
+      "description": "A thinking indicator with a scribbling caret and timer that unfolds into the reasoning steps.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/thought-fold.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "deliberate-text",
+      "type": "registry:ui",
+      "title": "Deliberate Text",
+      "description": "Streaming text where uncertain words flicker between alternatives before settling.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/deliberate-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "context-gauge",
+      "type": "registry:ui",
+      "title": "Context Gauge",
+      "description": "How full an AI context window is, as a ticket tear line that warns near the limit.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/context-gauge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "agent-steps",
+      "type": "registry:ui",
+      "title": "Agent Steps",
+      "description": "A live checklist of an AI agent's steps, with timers, drawn checks and a filling line.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/agent-steps.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "confidence-text",
+      "type": "registry:ui",
+      "title": "Confidence Text",
+      "description": "AI text that shows how sure it is about every word, with highlights, underlines or fading.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/confidence-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "citation-peek",
+      "type": "registry:ui",
+      "title": "Citation Peek",
+      "description": "An answer with numbered sources; point at one and its source card unfolds while the sentence lights up.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/citation-peek.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "prompt-deck",
+      "type": "registry:ui",
+      "title": "Prompt Deck",
+      "description": "Suggested prompts as a deck of cards you can fan out, stack, shuffle or lay out as a grid.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/prompt-deck.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "temperature-dial",
+      "type": "registry:ui",
+      "title": "Temperature Dial",
+      "description": "An AI creativity control with a particle chamber that goes from calm rows to a wild swarm.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/temperature-dial.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "response-versions",
+      "type": "registry:ui",
+      "title": "Response Versions",
+      "description": "Several versions of an AI answer with smooth switching and a regenerate shimmer.",
+      "categories": [
+        "ai"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/response-versions.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "rune-decode-text",
+      "type": "registry:ui",
+      "title": "Rune Decode Text",
+      "description": "Text that starts as ancient runes and decodes into readable letters.",
+      "categories": [
+        "ancient"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/rune-decode-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "wax-seal-button",
+      "type": "registry:ui",
+      "title": "Wax Seal Button",
+      "description": "A button that stamps a wax seal when pressed, with a squash and a ripple.",
+      "categories": [
+        "ancient"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/wax-seal-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scroll-unroll",
+      "type": "registry:ui",
+      "title": "Scroll Unroll",
+      "description": "A parchment scroll that unrolls between two wooden rods to reveal its content.",
+      "categories": [
+        "ancient"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/scroll-unroll.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hourglass-loader",
+      "type": "registry:ui",
+      "title": "Hourglass Loader",
+      "description": "Sand drains and piles up, then the glass turns over and starts again.",
+      "categories": [
+        "ancient"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/hourglass-loader.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "astrolabe-picker",
+      "type": "registry:ui",
+      "title": "Astrolabe Picker",
+      "description": "Choose a value by turning the rings of an astrolabe.",
+      "categories": [
+        "ancient"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/astrolabe-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chisel-input",
+      "type": "registry:ui",
+      "title": "Chisel Input",
+      "description": "A text field cut into stone, with dust falling from every letter.",
+      "categories": [
+        "ancient"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/chisel-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spring-slider",
+      "type": "registry:ui",
+      "title": "Spring Slider",
+      "description": "A slider on a spring that overshoots and settles, with a rubber-band track.",
+      "categories": [
+        "physics"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/spring-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "newtons-cradle-loader",
+      "type": "registry:ui",
+      "title": "Newton's Cradle Loader",
+      "description": "A loader that swings like a real Newton's cradle.",
+      "categories": [
+        "physics"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/newtons-cradle-loader.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "liquid-progress",
+      "type": "registry:ui",
+      "title": "Liquid Progress",
+      "description": "Progress as liquid in a vessel, with waves that slosh under the cursor.",
+      "categories": [
+        "physics"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/liquid-progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pull-chain-toggle",
+      "type": "registry:ui",
+      "title": "Pull Chain Toggle",
+      "description": "A hanging chain with rope physics: pull it and let go to switch.",
+      "categories": [
+        "physics"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/pull-chain-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "jelly-card",
+      "type": "registry:ui",
+      "title": "Jelly Card",
+      "description": "A card that squishes where you press and wobbles back when you let go.",
+      "categories": [
+        "physics"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/jelly-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "orbit-menu",
+      "type": "registry:ui",
+      "title": "Orbit Menu",
+      "description": "Menu items that orbit a center button and pause while you aim.",
+      "categories": [
+        "physics"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/orbit-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "paper-drop",
+      "type": "registry:ui",
+      "title": "Paper Drop",
+      "description": "A file drop zone where every file becomes a sheet of paper that flies in and fills as it uploads.",
+      "categories": [
+        "files"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/paper-drop.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "fold-tree",
+      "type": "registry:ui",
+      "title": "Fold Tree",
+      "description": "A file tree whose folders unfold like paper, with full tree keyboard support.",
+      "categories": [
+        "files"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/fold-tree.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vault-code",
+      "type": "registry:ui",
+      "title": "Vault Code",
+      "description": "A one-time-code input made of lock tumblers that roll into place, with a padlock that opens.",
+      "categories": [
+        "inputs"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/vault-code.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "crumple-trash",
+      "type": "registry:ui",
+      "title": "Crumple Trash",
+      "description": "A list where deleted rows crumple into a paper ball, arc into a bin, and can be undone.",
+      "categories": [
+        "feedback"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/crumple-trash.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "week-pulse",
+      "type": "registry:ui",
+      "title": "Week Pulse",
+      "description": "A 7 × 24 activity heatmap with a crosshair, pulsing peaks and day and hour totals.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/week-pulse.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hotspot-map",
+      "type": "registry:ui",
+      "title": "Hotspot Map",
+      "description": "A click heatmap over any page or screenshot, with replay and live click recording.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/hotspot-map.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "visitor-count",
+      "type": "registry:ui",
+      "title": "Visitor Count",
+      "description": "A live visitor counter with rolling digits, arrivals and a heartbeat that follows traffic.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/visitor-count.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "visitor-map",
+      "type": "registry:ui",
+      "title": "Visitor Map",
+      "description": "A dotted world map of live visitors with pings, arcs to home and an auto tour.",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "registry/relic/ui/visitor-map.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

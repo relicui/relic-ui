@@ -6,6 +6,9 @@ import { ShimmerButtonPlayground } from "@/components/playgrounds/shimmer-button
 import { SmoothCaretInputPlayground } from "@/components/playgrounds/smooth-caret-input-playground"
 import { StretchTabsPlayground } from "@/components/playgrounds/stretch-tabs-playground"
 import { moreExtras } from "@/lib/docs-more"
+import { aiExtras } from "@/lib/docs-ai"
+import { dataExtras } from "@/lib/docs-data"
+import { themeExtras } from "@/lib/docs-themes"
 import {
   CATEGORIES,
   nativeProps,
@@ -559,7 +562,7 @@ const extras: Record<string, DocExtras> = {
 
 export type { PropDoc } from "@/lib/docs-shared"
 
-const allExtras: Record<string, DocExtras> = { ...extras, ...moreExtras }
+const allExtras: Record<string, DocExtras> = { ...extras, ...moreExtras, ...themeExtras, ...aiExtras, ...dataExtras }
 
 export type DocItem = (typeof registry.items)[number] &
   DocExtras & { demoPath: string; category: CategoryId }

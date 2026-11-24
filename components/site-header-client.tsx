@@ -333,16 +333,28 @@ function GitHubStars({ stars: initial }: { stars: number | null }) {
       target="_blank"
       rel="noreferrer"
       aria-label={label}
-      className="group/stars hidden h-8 items-center gap-2 rounded-full border bg-background/60 pr-3 pl-2.5 text-sm text-muted-foreground transition-colors outline-none hover:border-foreground/25 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
+      className="group/stars relative isolate hidden h-8 items-center gap-2 rounded-full pr-3 pl-2.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 sm:inline-flex"
     >
-      <GitHubMark className="size-4" />
+      {/* The glow: a soft gold aura that breathes, and a light that travels
+          around the border. */}
+      <span aria-hidden className="pointer-events-none absolute -inset-1 -z-20 animate-pulse rounded-full bg-brand/25 opacity-70 blur-md transition-opacity duration-300 group-hover/stars:opacity-100 motion-reduce:animate-none" />
+      <span aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-full bg-border">
+        <span className="absolute top-1/2 left-1/2 aspect-square w-[220%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0deg,var(--brand)_50deg,transparent_110deg)] motion-reduce:animate-none" />
+      </span>
+      <span aria-hidden className="pointer-events-none absolute inset-px -z-10 rounded-full bg-background" />
+      {/* The signal: every few seconds the logo double-blinks in gold, and a
+          ring of light pulses out behind it, like a searchlight in the sky. */}
+      <span className="relative inline-flex">
+        <span aria-hidden className="pointer-events-none absolute inset-0 animate-[signal-ring_4.5s_ease-out_infinite] rounded-full bg-brand/60 opacity-0 motion-reduce:hidden" />
+        <GitHubMark className="relative size-4 animate-[signal-blink_4.5s_ease-in-out_infinite] motion-reduce:animate-none" />
+      </span>
       {stars !== null && (
         <>
           <span aria-hidden className="h-4 w-px bg-border" />
           <span aria-hidden className="inline-flex items-center gap-1">
             <svg
               viewBox="0 0 16 16"
-              className="size-3.5 fill-transparent stroke-current transition-[fill] duration-300 group-hover/stars:fill-current"
+              className="size-3.5 animate-[star-twinkle_2.6s_ease-in-out_infinite] fill-brand stroke-brand text-brand motion-reduce:animate-none group-hover/stars:[animation-duration:1.2s]"
               strokeWidth={1.3}
               strokeLinejoin="round"
             >
