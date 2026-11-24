@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
 const holdToConfirmButtonVariants = cva(
   [
     "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden",
-    "rounded-lg border bg-background font-medium whitespace-nowrap text-foreground shadow-xs",
+    "border bg-background font-medium whitespace-nowrap text-foreground shadow-xs",
     "touch-manipulation select-none [-webkit-touch-callout:none]",
     "transition-transform duration-200 data-[state=holding]:scale-[0.97]",
     "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
@@ -35,8 +35,13 @@ const holdToConfirmButtonVariants = cva(
         default: "h-10 px-5 text-sm",
         lg: "h-12 px-7 text-base",
       },
+      shape: {
+        rounded: "rounded-lg",
+        pill: "rounded-full",
+        square: "rounded-sm",
+      },
     },
-    defaultVariants: { size: "default" },
+    defaultVariants: { size: "default", shape: "rounded" },
   }
 )
 
@@ -83,12 +88,22 @@ export interface HoldToConfirmButtonProps
   confirmedChildren?: React.ReactNode
   /** Hint read by screen readers. */
   holdHint?: string
+  /** Short vibration on confirm, on phones that support it. */
+  haptics?: boolean
+  /** Called when the user starts holding. */
+  onHoldStart?: () => void
+  /** Called when the user lets go too early. */
+  onHoldCancel?: () => void
 }
 
 export function HoldToConfirmButton({
   className,
   size,
+  shape,
   variant = "default",
+  haptics = true,
+  onHoldStart,
+  onHoldCancel,
   duration = 1.2,
   fillFrom = "left",
   resetAfter = 1.2,
@@ -147,6 +162,7 @@ export function HoldToConfirmButton({
   function start() {
     if (disabled || stateRef.current !== "idle") return
     setState("holding")
+    onHoldStart?.()
     controls.current?.stop()
     controls.current = animate(progress, 1, {
       // Resume from wherever the fill currently is.
@@ -155,7 +171,7 @@ export function HoldToConfirmButton({
       onComplete: () => {
         if (stateRef.current !== "holding") return
         setState("confirmed")
-        navigator.vibrate?.(15)
+        if (haptics) navigator.vibrate?.(15)
         onConfirmRef.current?.()
         resetTimer.current = setTimeout(() => {
           setState("idle")
@@ -171,6 +187,7 @@ export function HoldToConfirmButton({
   function cancel() {
     if (stateRef.current !== "holding") return
     setState("idle")
+    onHoldCancel?.()
     controls.current?.stop()
     controls.current = animate(progress, 0, { duration: 0.25, ease: "easeOut" })
   }
@@ -187,7 +204,7 @@ export function HoldToConfirmButton({
         data-state={state}
         disabled={disabled}
         aria-describedby={hintId}
-        className={cn(holdToConfirmButtonVariants({ size }), className)}
+        className={cn(holdToConfirmButtonVariants({ size, shape }), className)}
         onPointerDown={(e) => {
           onPointerDown?.(e)
           if (e.button === 0) start()

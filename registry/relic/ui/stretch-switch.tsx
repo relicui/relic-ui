@@ -35,6 +35,12 @@ export interface StretchSwitchProps
   checkedIcon?: React.ReactNode
   /** Icon or text shown inside the thumb when off. */
   uncheckedIcon?: React.ReactNode
+  /** Seconds for the thumb to travel. */
+  duration?: number
+  /** Round pill, or a softer rounded square. */
+  shape?: "pill" | "square"
+  /** Extra classes for the thumb, e.g. a color. */
+  thumbClassName?: string
   /** Name for form submission. Sends "on" when checked. */
   name?: string
 }
@@ -47,6 +53,9 @@ export function StretchSwitch({
   stretch = 0.45,
   checkedIcon,
   uncheckedIcon,
+  duration = 0.38,
+  shape = "pill",
+  thumbClassName,
   name,
   disabled,
   className,
@@ -76,9 +85,9 @@ export function StretchSwitch({
       checked
         ? { x: [0, 0, travel], width: [thumb, wide, thumb] }
         : { x: [travel, travel - (wide - thumb), 0], width: [thumb, wide, thumb] },
-      { duration: 0.38, times: [0, 0.45, 1], ease: [0.65, 0, 0.35, 1] }
+      { duration, times: [0, 0.45, 1], ease: [0.65, 0, 0.35, 1] }
     )
-  }, [checked, animate, scope, reduceMotion, thumb, travel, stretch])
+  }, [checked, animate, scope, reduceMotion, thumb, travel, stretch, duration])
 
   function toggle() {
     const next = !checked
@@ -99,7 +108,8 @@ export function StretchSwitch({
         if (!e.defaultPrevented) toggle()
       }}
       className={cn(
-        "relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors duration-300",
+        "relative inline-flex shrink-0 items-center p-0.5 transition-colors duration-300",
+        shape === "pill" ? "rounded-full" : "rounded-md",
         "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
         "disabled:cursor-not-allowed disabled:opacity-50",
         checked ? "bg-primary" : "bg-input dark:bg-input/80",
@@ -111,7 +121,11 @@ export function StretchSwitch({
       <span
         ref={scope}
         aria-hidden
-        className="flex items-center justify-center rounded-full bg-background text-[10px] text-foreground shadow-sm [&_svg]:size-3"
+        className={cn(
+          "flex items-center justify-center bg-background text-[10px] text-foreground shadow-sm [&_svg]:size-3",
+          shape === "pill" ? "rounded-full" : "rounded-[4px]",
+          thumbClassName
+        )}
         style={{
           width: thumb,
           height: thumb,

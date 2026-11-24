@@ -47,6 +47,16 @@ export interface CaretFieldProps {
   colorVar?: string
   /** CSS variable for the blinking carets. */
   accentVar?: string
+  /** Carets turn toward the cursor. Off keeps only the blinking. */
+  interactive?: boolean
+  /** Line thickness of each caret, in pixels. */
+  thickness?: number
+  /** Opacity of carets at rest (0–1). */
+  restOpacity?: number
+  /** How much carets grow near the cursor. 1 doubles their length, 0 keeps it. */
+  growth?: number
+  /** An invisible cursor drifts around when the real one is still or absent (phones). */
+  autoCursor?: boolean
 }
 
 export function CaretField({
@@ -58,6 +68,11 @@ export function CaretField({
   blinkChance: BLINK_CHANCE = 0.025,
   colorVar = "--muted-foreground",
   accentVar = "--primary",
+  interactive = true,
+  thickness = 1.5,
+  restOpacity = 0.28,
+  growth = 1,
+  autoCursor = false,
 }: CaretFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reduceMotion = useReducedMotion()
@@ -74,6 +89,9 @@ export function CaretField({
     let frame = 0
     let visible = true
     const pointer = { x: 0, y: 0, active: false }
+    let lastRealMove = -Infinity
+    // The invisible cursor starts where the real one was last seen.
+    const ghost = { x: 0, y: 0 }
     const colors = { line: "gray", brand: "orange" }
 
     function readColors() {
@@ -102,6 +120,10 @@ export function CaretField({
         }
       }
       blinks = []
+      if (lastRealMove === -Infinity) {
+        ghost.x = width / 2
+        ghost.y = height / 2
+      }
     }
 
     function line(x: number, y: number, angle: number, length: number) {
@@ -112,9 +134,24 @@ export function CaretField({
     }
 
     function draw(now: number) {
+      // With autoCursor, an invisible cursor drifts around whenever the real
+      // one has been still for a while (and always on touch screens).
+      let px = pointer.x
+      let py = pointer.y
+      let pActive = pointer.active
+      if (autoCursor && !reduceMotion && now - lastRealMove > 2500) {
+        pActive = true
+        // Ease the invisible cursor toward a slow drifting point, so it never jumps.
+        const targetX = width * (0.5 + 0.34 * Math.sin(now * 0.00019))
+        const targetY = height * (0.5 + 0.3 * Math.sin(now * 0.00029 + 1.3))
+        ghost.x += (targetX - ghost.x) * 0.02
+        ghost.y += (targetY - ghost.y) * 0.02
+        px = ghost.x
+        py = ghost.y
+      }
       ctx!.clearRect(0, 0, width, height)
       ctx!.lineCap = "round"
-      ctx!.lineWidth = 1.5
+      ctx!.lineWidth = thickness
       ctx!.strokeStyle = colors.line
 
       // Carets at rest share one path, which keeps drawing cheap.
@@ -124,9 +161,9 @@ export function CaretField({
       for (const cell of cells) {
         let targetT = 0
         let targetA = 0
-        if (pointer.active && !reduceMotion) {
-          const dx = pointer.x - cell.x
-          const dy = pointer.y - cell.y
+        if (interactive && pActive && !reduceMotion) {
+          const dx = px - cell.x
+          const dy = py - cell.y
           const distance = Math.hypot(dx, dy)
           if (distance < RADIUS) {
             const k = 1 - distance / RADIUS
@@ -134,8 +171,8 @@ export function CaretField({
             targetA = wrapHalfTurn(Math.atan2(dy, dx) - Math.PI / 2)
           }
         }
-        cell.t += (targetT - cell.t) * 0.14
-        cell.a += wrapHalfTurn(targetA - cell.a) * 0.18
+        cell.t += (targetT - cell.t) * 0.1
+        cell.a += wrapHalfTurn(targetA - cell.a) * 0.12
 
         if (cell.t < 0.01 && Math.abs(cell.a) < 0.01) {
           resting.moveTo(cell.x, cell.y - LENGTH / 2)
@@ -145,13 +182,13 @@ export function CaretField({
         }
       }
 
-      ctx!.globalAlpha = 0.28
+      ctx!.globalAlpha = restOpacity
       ctx!.stroke(resting)
 
       for (const cell of active) {
-        ctx!.globalAlpha = 0.28 + cell.t * 0.55
+        ctx!.globalAlpha = restOpacity + cell.t * (0.85 - restOpacity)
         ctx!.beginPath()
-        line(cell.x, cell.y, cell.a, LENGTH * (1 + cell.t))
+        line(cell.x, cell.y, cell.a, LENGTH * (1 + cell.t * growth))
         ctx!.stroke()
       }
 
@@ -189,8 +226,11 @@ export function CaretField({
 
     function handlePointerMove(e: PointerEvent) {
       const rect = canvas!.getBoundingClientRect()
+      lastRealMove = performance.now()
       pointer.x = e.clientX - rect.left
       pointer.y = e.clientY - rect.top
+      ghost.x = pointer.x
+      ghost.y = pointer.y
       pointer.active =
         pointer.x > -RADIUS &&
         pointer.y > -RADIUS &&
@@ -246,7 +286,7 @@ export function CaretField({
       document.documentElement.removeEventListener("pointerleave", handlePointerLeave)
       document.removeEventListener("visibilitychange", handleVisibility)
     }
-  }, [reduceMotion, GAP, LENGTH, RADIUS, MAX_BLINKS, BLINK_CHANCE, colorVar, accentVar])
+  }, [reduceMotion, GAP, LENGTH, RADIUS, MAX_BLINKS, BLINK_CHANCE, colorVar, accentVar, interactive, thickness, restOpacity, growth, autoCursor])
 
   return (
     <canvas

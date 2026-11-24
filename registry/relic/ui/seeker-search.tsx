@@ -38,8 +38,28 @@ export interface SeekerSearchProps {
   shortcut?: string
   /** Accessible name for the input. */
   label?: string
+  /** Height and text size of the field. */
+  size?: keyof typeof SIZES
+  /** Look of the field. */
+  variant?: keyof typeof VARIANTS
+  /** Highlight the matching part of each result. */
+  highlightMatches?: boolean
+  /** Milliseconds per letter the placeholder types. */
+  typeSpeed?: number
   className?: string
 }
+
+const SIZES = {
+  sm: "h-9 text-sm",
+  default: "h-11 text-sm",
+  lg: "h-13 text-base",
+} as const
+
+const VARIANTS = {
+  default: "rounded-xl border bg-background shadow-xs",
+  ghost: "rounded-xl border border-transparent bg-muted/60 has-[input:focus-visible]:bg-background",
+  underline: "rounded-none border-0 border-b bg-transparent has-[input:focus-visible]:ring-0",
+} as const
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
@@ -71,7 +91,7 @@ function Highlight({ text, query }: { text: string; query: string }) {
 }
 
 /** Types, holds and deletes each phrase in turn, like a person would. */
-function useTypewriter(phrases: string[], active: boolean) {
+function useTypewriter(phrases: string[], active: boolean, speed: number) {
   const [text, setText] = useState("")
   const key = phrases.join("\u0000")
 
@@ -90,7 +110,7 @@ function useTypewriter(phrases: string[], active: boolean) {
         for (let n = 1; n <= phrase.length; n++) {
           if (cancelled) return
           setText(phrase.slice(0, n))
-          await wait(55 + Math.random() * 45)
+          await wait(speed + Math.random() * speed * 0.8)
         }
         await wait(1800)
         for (let n = phrase.length - 1; n >= 0; n--) {
@@ -108,7 +128,7 @@ function useTypewriter(phrases: string[], active: boolean) {
       cancelled = true
       timers.forEach(clearTimeout)
     }
-  }, [key, active])
+  }, [key, active, speed])
 
   return text
 }
@@ -130,6 +150,10 @@ export function SeekerSearch({
   maxResults = 6,
   shortcut = "/",
   label = "Search",
+  size = "default",
+  variant = "default",
+  highlightMatches = true,
+  typeSpeed = 55,
   className,
 }: SeekerSearchProps) {
   const id = useId()
@@ -140,7 +164,11 @@ export function SeekerSearch({
   const [focused, setFocused] = useState(false)
   const [active, setActive] = useState(0)
 
-  const typed = useTypewriter(placeholders, !query && !focused && !reduceMotion)
+  const typed = useTypewriter(
+    placeholders,
+    !query && !focused && !reduceMotion,
+    typeSpeed
+  )
   const ghost = reduceMotion || focused ? (placeholders[0] ?? "") : typed
 
   const results = useMemo(() => {
@@ -199,7 +227,13 @@ export function SeekerSearch({
   return (
     <MotionConfig reducedMotion="user">
       <div data-slot="seeker-search" className={cn("relative w-full", className)}>
-        <div className="relative flex h-11 items-center rounded-xl border bg-background shadow-xs transition-[box-shadow,border-color] has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-ring/50">
+        <div
+          className={cn(
+            "relative flex items-center transition-[box-shadow,border-color,background-color] has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-ring/50",
+            SIZES[size],
+            VARIANTS[variant]
+          )}
+        >
           <svg
             aria-hidden
             viewBox="0 0 16 16"
@@ -232,14 +266,14 @@ export function SeekerSearch({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onKeyDown={handleKeyDown}
-            className="peer h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none"
+            className="peer h-full min-w-0 flex-1 bg-transparent px-3 outline-none"
           />
 
           {/* The placeholder that types itself. */}
           {!query && (
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-10 flex items-center text-sm text-muted-foreground"
+              className="pointer-events-none absolute inset-y-0 left-10 flex items-center text-muted-foreground"
             >
               {ghost}
               {!focused && !reduceMotion && (
@@ -291,7 +325,7 @@ export function SeekerSearch({
                       />
                     )}
                     <span className="font-medium">
-                      <Highlight text={item.label} query={query.trim()} />
+                      <Highlight text={item.label} query={highlightMatches ? query.trim() : ""} />
                     </span>
                     {item.description && (
                       <span className="text-xs text-muted-foreground/80">

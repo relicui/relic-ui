@@ -75,6 +75,10 @@ export interface StretchTabsProps
   size?: keyof typeof SIZES
   /** How much the indicator stretches while moving. */
   stretch?: keyof typeof STRETCH
+  /** Stretch the tabs to fill the full width, sharing it equally. */
+  fullWidth?: boolean
+  /** Extra classes for the moving indicator, e.g. a color. */
+  indicatorClassName?: string
 }
 
 export function StretchTabs({
@@ -85,6 +89,8 @@ export function StretchTabs({
   variant = "pill",
   size = "default",
   stretch = "normal",
+  fullWidth = false,
+  indicatorClassName,
   className,
   ...props
 }: StretchTabsProps) {
@@ -177,7 +183,7 @@ export function StretchTabs({
       data-slot="stretch-tabs"
       data-variant={variant}
       className={cn(
-        "relative inline-flex items-center",
+        fullWidth ? "relative flex w-full items-center" : "relative inline-flex items-center",
         VARIANTS[variant].list,
         className
       )}
@@ -185,7 +191,7 @@ export function StretchTabs({
     >
       <motion.span
         aria-hidden
-        className={cn("absolute left-0", VARIANTS[variant].indicator)}
+        className={cn("absolute left-0", VARIANTS[variant].indicator, indicatorClassName)}
         style={{ x: left, width }}
       />
       {items.map((item, index) => {
@@ -206,6 +212,7 @@ export function StretchTabs({
             onKeyDown={(e) => handleKeyDown(e, index)}
             className={cn(
               "relative z-10 inline-flex items-center gap-1.5 rounded-md font-medium whitespace-nowrap transition-colors",
+              fullWidth && "flex-1 justify-center",
               "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
               SIZES[size],
               selected

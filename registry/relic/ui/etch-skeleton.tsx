@@ -24,9 +24,21 @@ export interface EtchSkeletonProps
   avatar?: boolean
   /** What screen readers announce. */
   label?: string
+  /** Thickness of each line (and the avatar size with it). */
+  size?: keyof typeof SIZES
+  /** Show the caret that writes each line. */
+  showCaret?: boolean
+  /** Round or rounded-square avatar. */
+  avatarShape?: "circle" | "square"
 }
 
 const DEFAULT_WIDTHS = ["100%", "92%", "100%", "84%"]
+
+const SIZES = {
+  sm: { line: "h-2", gap: "gap-2", avatar: "size-8" },
+  default: { line: "h-3", gap: "gap-2.5", avatar: "size-10" },
+  lg: { line: "h-4", gap: "gap-3", avatar: "size-12" },
+} as const
 
 /**
  * A loading placeholder where a caret writes each line from left to right,
@@ -38,10 +50,14 @@ export function EtchSkeleton({
   speed = 1,
   avatar = false,
   label = "Loading",
+  size = "default",
+  showCaret = true,
+  avatarShape = "circle",
   className,
   ...props
 }: EtchSkeletonProps) {
   const reduceMotion = useReducedMotion()
+  const sizing = SIZES[size]
   const perLine = 0.85 / Math.max(speed, 0.1)
   const hold = 0.9 / Math.max(speed, 0.1)
   const total = lines * perLine + hold
@@ -61,9 +77,16 @@ export function EtchSkeleton({
       {...props}
     >
       {avatar && (
-        <div aria-hidden className="size-10 shrink-0 rounded-full bg-muted" />
+        <div
+          aria-hidden
+          className={cn(
+            "shrink-0 bg-muted",
+            sizing.avatar,
+            avatarShape === "circle" ? "rounded-full" : "rounded-lg"
+          )}
+        />
       )}
-      <div aria-hidden className="flex min-w-0 flex-1 flex-col gap-2.5 pt-0.5">
+      <div aria-hidden className={cn("flex min-w-0 flex-1 flex-col pt-0.5", sizing.gap)}>
         {Array.from({ length: lines }, (_, i) => {
           // This line is written between `start` and `end` of each cycle.
           const start = Math.max((i * perLine) / total, 0.001)
@@ -72,7 +95,7 @@ export function EtchSkeleton({
           return (
             <div
               key={i}
-              className="relative h-3 overflow-hidden rounded-full bg-muted"
+              className={cn("relative overflow-hidden rounded-full bg-muted", sizing.line)}
               style={{ width: widthOf(i) }}
             >
               {!reduceMotion && (
@@ -90,7 +113,7 @@ export function EtchSkeleton({
                     repeat: Infinity,
                   }}
                 >
-                  <motion.span
+                  {showCaret && <motion.span
                     className="absolute inset-y-0 right-0 w-0.5 rounded-full bg-primary/70"
                     animate={{ opacity: [0, 0, 1, 1, 0, 0] }}
                     transition={{
@@ -99,7 +122,7 @@ export function EtchSkeleton({
                       ease: "linear",
                       repeat: Infinity,
                     }}
-                  />
+                  />}
                 </motion.div>
               )}
             </div>

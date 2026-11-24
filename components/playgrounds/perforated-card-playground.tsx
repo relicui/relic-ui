@@ -17,15 +17,15 @@ const DEFAULTS = {
   perforation: "dashed" as "dashed" | "dotted",
   exitEffect: "fall" as "fall" | "fly" | "fade",
   threshold: 70,
+  tilt: 3,
   notches: true,
+  tearOnClick: false,
 }
 
 export function PerforatedCardPlayground() {
   const [o, setO] = useState(DEFAULTS)
   // Changing the key remounts the card, which puts the stub back.
   const [round, setRound] = useState(0)
-  const set = <K extends keyof typeof DEFAULTS>(k: K, v: (typeof DEFAULTS)[K]) =>
-    setO((prev) => ({ ...prev, [k]: v }))
 
   return (
     <PlaygroundShell
@@ -40,7 +40,7 @@ export function PerforatedCardPlayground() {
             {...o}
             stub={
               <div className="flex items-center justify-between text-muted-foreground">
-                <span>Pull down to tear</span>
+                <span>{o.tearOnClick ? "Pull or tap to tear" : "Pull down to tear"}</span>
                 <span aria-hidden>↓</span>
               </div>
             }
@@ -64,11 +64,13 @@ export function PerforatedCardPlayground() {
       }
       controls={
         <>
-          <OptionGroup label="perforation" options={["dashed", "dotted"] as const} value={o.perforation} onChange={(v) => set("perforation", v)} />
-          <OptionGroup label="exitEffect" options={["fall", "fly", "fade"] as const} value={o.exitEffect} onChange={(v) => set("exitEffect", v)} />
-          <RangeControl label="threshold" value={o.threshold} min={30} max={150} unit="px" onChange={(v) => set("threshold", v)} />
+          <OptionGroup label="perforation" options={["dashed", "dotted"] as const} value={o.perforation} onChange={(v) => setO({ ...o, perforation: v })} />
+          <OptionGroup label="exitEffect" options={["fall", "fly", "fade"] as const} value={o.exitEffect} onChange={(v) => setO({ ...o, exitEffect: v })} />
+          <RangeControl label="threshold" value={o.threshold} min={30} max={150} unit="px" onChange={(v) => setO({ ...o, threshold: v })} />
+          <RangeControl label="tilt" value={o.tilt} min={0} max={15} unit="°" onChange={(v) => setO({ ...o, tilt: v })} />
           <ToggleList>
-            <Toggle label="notches" checked={o.notches} onChange={(v) => set("notches", v)} />
+            <Toggle label="notches" checked={o.notches} onChange={(v) => setO({ ...o, notches: v })} />
+            <Toggle label="tearOnClick" checked={o.tearOnClick} onChange={(v) => setO({ ...o, tearOnClick: v })} />
           </ToggleList>
         </>
       }

@@ -37,3 +37,27 @@ export const CATEGORIES = [
 ] as const
 
 export type CategoryId = (typeof CATEGORIES)[number]["id"]
+
+/** Shown with a "New" badge in the gallery. Remove names as they age. */
+export const NEW_COMPONENTS = new Set([
+  "seeker-search",
+  "caret-tag-input",
+  "dial-number-input",
+  "stretch-switch",
+  "rocker-switch",
+  "ink-checkbox",
+  "caret-loader",
+  "perforation-progress",
+  "etch-skeleton",
+  "ticket-toast",
+  "rewrite-text",
+  "caret-field",
+])
+
+/** Components whose preview needs room: they span two columns in the gallery. */
+export const WIDE_COMPONENTS = new Set([
+  "smooth-caret-input",
+  "seeker-search",
+  "caret-field",
+  "fold-accordion",
+])

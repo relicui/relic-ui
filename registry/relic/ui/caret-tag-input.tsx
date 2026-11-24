@@ -19,6 +19,18 @@ import {
 
 import { cn } from "@/lib/utils"
 
+const CHIP_VARIANTS = {
+  secondary: "bg-secondary text-secondary-foreground",
+  outline: "border bg-background text-foreground",
+  primary: "bg-primary text-primary-foreground",
+} as const
+
+const SIZES = {
+  sm: { field: "min-h-8 py-1 text-xs", chip: "h-6", input: "h-6" },
+  default: { field: "min-h-10 py-1.5 text-sm", chip: "h-7", input: "h-7" },
+  lg: { field: "min-h-12 py-2 text-base", chip: "h-8", input: "h-8" },
+} as const
+
 export interface CaretTagInputProps {
   /** The tags (controlled). */
   value?: string[]
@@ -30,12 +42,30 @@ export interface CaretTagInputProps {
   max?: number
   /** Keys that turn the typed text into a tag. */
   separators?: string[]
+  /** Look of the chips. */
+  variant?: keyof typeof CHIP_VARIANTS
+  /** Height of the field and chips. */
+  size?: keyof typeof SIZES
+  /** Allow the same tag more than once. */
+  allowDuplicates?: boolean
+  /** Fly new tags out of the caret. Off makes them simply pop in. */
+  flyFromCaret?: boolean
   /** Accessible name for the input. */
   label?: string
   /** Name for form submission. Tags are sent comma-separated. */
   name?: string
   disabled?: boolean
   className?: string
+}
+
+/** A stable key per tag, counting repeats so duplicates stay distinct. */
+function keyed(tags: string[]) {
+  const seen = new Map<string, number>()
+  return tags.map((tag) => {
+    const n = seen.get(tag) ?? 0
+    seen.set(tag, n + 1)
+    return { tag, key: `${tag}\u0000${n}` }
+  })
 }
 
 /**
@@ -49,6 +79,10 @@ export function CaretTagInput({
   placeholder = "Add a tag…",
   max,
   separators = ["Enter", ","],
+  variant = "secondary",
+  size = "default",
+  allowDuplicates = false,
+  flyFromCaret = true,
   label = "Tags",
   name,
   disabled,
@@ -59,11 +93,12 @@ export function CaretTagInput({
   const [draft, setDraft] = useState("")
   const [announcement, setAnnouncement] = useState("")
   const reduceMotion = useReducedMotion()
+  const sizing = SIZES[size]
 
   const inputRef = useRef<HTMLInputElement>(null)
   const chips = useRef(new Map<string, HTMLSpanElement>())
   // Where the new tag should fly from: the start of the typed text.
-  const flight = useRef<{ tag: string; x: number; y: number } | null>(null)
+  const flight = useRef<{ key: string; x: number; y: number } | null>(null)
 
   function update(next: string[]) {
     if (valueProp === undefined) setInternal(next)
@@ -78,9 +113,9 @@ export function CaretTagInput({
   function commit() {
     const tag = draft.trim()
     if (!tag) return
-    if (tags.includes(tag)) {
+    if (!allowDuplicates && tags.includes(tag)) {
       // Already there: wiggle the existing chip instead of adding a copy.
-      shake(chips.current.get(tag))
+      shake(chips.current.get(`${tag}\u00000`))
       return
     }
     if (max !== undefined && tags.length >= max) {
@@ -88,11 +123,12 @@ export function CaretTagInput({
       return
     }
     const input = inputRef.current
-    if (input) {
+    if (input && flyFromCaret) {
       const rect = input.getBoundingClientRect()
       const paddingLeft = parseFloat(getComputedStyle(input).paddingLeft) || 0
+      const repeats = tags.filter((t) => t === tag).length
       flight.current = {
-        tag,
+        key: `${tag}\u0000${repeats}`,
         x: rect.left + paddingLeft,
         y: rect.top + rect.height / 2,
       }
@@ -102,8 +138,9 @@ export function CaretTagInput({
     setAnnouncement(`Added ${tag}`)
   }
 
-  function remove(tag: string) {
-    update(tags.filter((t) => t !== tag))
+  function remove(index: number) {
+    const tag = tags[index]
+    update(tags.filter((_, i) => i !== index))
     setAnnouncement(`Removed ${tag}`)
     inputRef.current?.focus()
   }
@@ -113,7 +150,7 @@ export function CaretTagInput({
     const pending = flight.current
     if (!pending) return
     flight.current = null
-    const chip = chips.current.get(pending.tag)
+    const chip = chips.current.get(pending.key)
     if (!chip || reduceMotion) return
     const rect = chip.getBoundingClientRect()
     animate(
@@ -134,24 +171,31 @@ export function CaretTagInput({
         data-slot="caret-tag-input"
         onClick={() => inputRef.current?.focus()}
         className={cn(
-          "flex min-h-10 w-full cursor-text flex-wrap items-center gap-1.5 rounded-lg border bg-background px-2 py-1.5 text-sm shadow-xs transition-[box-shadow,border-color]",
+          "flex w-full cursor-text flex-wrap items-center gap-1.5 rounded-lg border bg-background px-2 shadow-xs transition-[box-shadow,border-color]",
           "has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-ring/50",
+          sizing.field,
           disabled && "pointer-events-none opacity-50",
           className
         )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
-          {tags.map((tag) => (
+          {keyed(tags).map(({ tag, key }, index) => (
             <motion.span
-              key={tag}
+              key={key}
               layout
               ref={(el) => {
-                if (el) chips.current.set(tag, el)
-                else chips.current.delete(tag)
+                if (el) chips.current.set(key, el)
+                else chips.current.delete(key)
               }}
+              initial={flyFromCaret ? false : { opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.7, filter: "blur(3px)", transition: { duration: 0.15 } }}
               transition={{ layout: { type: "spring", stiffness: 500, damping: 36 } }}
-              className="inline-flex h-7 items-center gap-1 rounded-md bg-secondary pr-1 pl-2 text-secondary-foreground"
+              className={cn(
+                "inline-flex items-center gap-1 rounded-md pr-1 pl-2",
+                sizing.chip,
+                CHIP_VARIANTS[variant]
+              )}
             >
               {tag}
               <button
@@ -159,9 +203,9 @@ export function CaretTagInput({
                 aria-label={`Remove ${tag}`}
                 onClick={(e) => {
                   e.stopPropagation()
-                  remove(tag)
+                  remove(index)
                 }}
-                className="inline-flex size-5 items-center justify-center rounded text-muted-foreground transition-colors outline-none hover:bg-background/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="inline-flex size-5 items-center justify-center rounded opacity-60 transition-opacity outline-none hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/50"
               >
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" className="size-3">
                   <path d="M4 4l8 8M12 4l-8 8" />
@@ -177,17 +221,20 @@ export function CaretTagInput({
           value={draft}
           disabled={disabled}
           placeholder={tags.length === 0 ? placeholder : ""}
-          onChange={(e) => setDraft(e.target.value.replace(",", ""))}
+          onChange={(e) => setDraft(e.target.value.replaceAll(",", ""))}
           onKeyDown={(e) => {
             if (separators.includes(e.key)) {
               e.preventDefault()
               commit()
             } else if (e.key === "Backspace" && !draft && tags.length) {
-              remove(tags[tags.length - 1])
+              remove(tags.length - 1)
             }
           }}
           onBlur={commit}
-          className="h-7 min-w-24 flex-1 bg-transparent px-1 outline-none placeholder:text-muted-foreground"
+          className={cn(
+            "min-w-24 flex-1 bg-transparent px-1 outline-none placeholder:text-muted-foreground",
+            sizing.input
+          )}
         />
 
         {name && <input type="hidden" name={name} value={tags.join(",")} />}

@@ -62,6 +62,10 @@ export interface PerforatedCardProps
   notches?: boolean
   /** How the stub leaves once it's torn off. */
   exitEffect?: keyof typeof EXIT_EFFECTS
+  /** How far (in degrees) the stub tilts as you pull it. */
+  tilt?: number
+  /** A simple click or tap also tears the stub, not just dragging. */
+  tearOnClick?: boolean
   /** Called when the stub is torn off. */
   onTear?: () => void
   /** Accessible label for the stub. */
@@ -99,6 +103,8 @@ export function PerforatedCard({
   perforation = "dashed",
   notches = true,
   exitEffect = "fall",
+  tilt = 3,
+  tearOnClick = false,
   onTear,
   tearLabel = "Tear off the stub to reveal hidden content",
   className,
@@ -110,7 +116,7 @@ export function PerforatedCard({
 
   const y = useMotionValue(0)
   // The stub starts tearing from one corner, so it tilts as you pull.
-  const rotate = useTransform(y, [0, threshold], [0, 3])
+  const rotate = useTransform(y, [0, threshold], [0, tilt])
 
   // Move keyboard focus to what was revealed.
   useEffect(() => {
@@ -168,6 +174,9 @@ export function PerforatedCard({
               dragElastic={{ top: 0.04, bottom: 0.6 }}
               onDragEnd={(_, info) => {
                 if (info.offset.y > threshold || info.velocity.y > 600) tear()
+              }}
+              onClick={() => {
+                if (tearOnClick) tear()
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {

@@ -247,3 +247,46 @@
         animation: none;
     }
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Smooth theme switching (see lib/theme-transition.ts).                     */
+/* -------------------------------------------------------------------------- */
+
+/* The new theme is revealed by a growing circle, so turn off the default
+   cross-fade and let the old page sit still underneath. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+    z-index: 1;
+}
+
+/* Fallback for browsers without View Transitions: colors ease over. */
+.theme-fade,
+.theme-fade *,
+.theme-fade *::before,
+.theme-fade *::after {
+    transition-property: background-color, border-color, color, fill, stroke,
+        box-shadow !important;
+    transition-duration: 600ms !important;
+    transition-timing-function: ease !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Smooth scrolling (Lenis, see components/smooth-scroll.tsx).               */
+/* -------------------------------------------------------------------------- */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+    overflow: clip;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+    pointer-events: none;
+}

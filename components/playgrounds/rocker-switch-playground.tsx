@@ -6,6 +6,8 @@ import {
   OptionGroup,
   PlaygroundShell,
   RangeControl,
+  Toggle,
+  ToggleList,
   toJsx,
 } from "@/components/docs/playground-controls"
 import { RockerSwitch } from "@/registry/relic/ui/rocker-switch"
@@ -16,7 +18,12 @@ const LABELS = {
   "✓ / ✕": ["✓", "✕"],
 } as const
 
-const DEFAULTS = { size: "default" as "sm" | "default" | "lg", tilt: 16 }
+const DEFAULTS = {
+  size: "default" as "sm" | "default" | "lg",
+  variant: "default" as "default" | "contrast",
+  tilt: 16,
+  showDivider: true,
+}
 
 export function RockerSwitchPlayground() {
   const [o, setO] = useState(DEFAULTS)
@@ -30,18 +37,17 @@ export function RockerSwitchPlayground() {
         setLabels("I / O")
       }}
       preview={
-        <RockerSwitch
-          aria-label="Playground rocker"
-          {...o}
-          onLabel={onLabel}
-          offLabel={offLabel}
-        />
+        <RockerSwitch aria-label="Playground rocker" {...o} onLabel={onLabel} offLabel={offLabel} />
       }
       controls={
         <>
           <OptionGroup label="labels" options={Object.keys(LABELS) as (keyof typeof LABELS)[]} value={labels} onChange={setLabels} />
+          <OptionGroup label="variant" options={["default", "contrast"] as const} value={o.variant} onChange={(v) => setO({ ...o, variant: v })} />
           <OptionGroup label="size" options={["sm", "default", "lg"] as const} value={o.size} onChange={(v) => setO({ ...o, size: v })} />
           <RangeControl label="tilt" value={o.tilt} min={0} max={30} unit="°" onChange={(v) => setO({ ...o, tilt: v })} />
+          <ToggleList>
+            <Toggle label="showDivider" checked={o.showDivider} onChange={(v) => setO({ ...o, showDivider: v })} />
+          </ToggleList>
         </>
       }
       code={toJsx(

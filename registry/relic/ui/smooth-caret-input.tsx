@@ -167,6 +167,12 @@ export interface SmoothCaretInputProps
   pasteWave?: boolean
   /** The caret gives a small shake when typing past maxLength. */
   bumpOnLimit?: boolean
+  /** Thickness of the line caret, in pixels. */
+  caretWidth?: number
+  /** Seconds each new letter takes to appear. */
+  letterDuration?: number
+  /** Show the caret even when the field isn't focused, e.g. for a typing demo. */
+  alwaysShowCaret?: boolean
 }
 
 export function SmoothCaretInput({
@@ -182,6 +188,9 @@ export function SmoothCaretInput({
   smear = true,
   pasteWave = true,
   bumpOnLimit = true,
+  caretWidth,
+  letterDuration = 0.22,
+  alwaysShowCaret = false,
   value,
   defaultValue,
   onChange,
@@ -231,7 +240,7 @@ export function SmoothCaretInput({
   // Keep in sync when a controlled value is changed from outside.
   const text = chars.map((c) => c.ch).join("")
   if (isControlled && String(value) !== text) {
-    setChars((prev) => diffChars(prev, String(value), false, false))
+    setChars((prev) => diffChars(prev, String(value), lettersOn, false))
   }
 
   const measure = useCallback(
@@ -416,7 +425,7 @@ export function SmoothCaretInput({
                     : undefined
                 }
                 transition={{
-                  duration: 0.22,
+                  duration: letterDuration,
                   ease: EASE_OUT,
                   delay: c.delay,
                   layout: { type: "spring", stiffness: 700, damping: 50 },
@@ -433,11 +442,12 @@ export function SmoothCaretInput({
             style={{
               x: caretX,
               scaleX: smear && motionOn ? caretSmear : 1,
+              width: caret === "line" && caretWidth ? caretWidth : undefined,
             }}
             className={cn(
               "absolute left-0",
               caretShape.box,
-              !(focused && collapsed) && "invisible"
+              !((focused || alwaysShowCaret) && collapsed) && "invisible"
             )}
           >
             <span ref={bumpScope} className="block size-full">

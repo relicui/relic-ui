@@ -5,6 +5,7 @@ import { useState } from "react"
 import {
   OptionGroup,
   PlaygroundShell,
+  RangeControl,
   Toggle,
   ToggleList,
   toJsx,
@@ -30,6 +31,8 @@ const DEFAULTS = {
   smear: true,
   animateDelete: true,
   pasteWave: true,
+  caretWidth: 2,
+  letterDuration: 0.22,
 }
 
 export function SmoothCaretInputPlayground() {
@@ -66,6 +69,8 @@ export function SmoothCaretInputPlayground() {
           <OptionGroup label="caret color" options={Object.keys(CARET_COLORS) as (keyof typeof CARET_COLORS)[]} value={color} onChange={setColor} />
           <OptionGroup label="caretSpeed" options={["snappy", "smooth", "lazy"] as const} value={o.caretSpeed} onChange={(v) => set("caretSpeed", v)} />
           <OptionGroup label="letterEffect" options={["rise", "fade", "blur", "scale", "drop", "none"] as const} value={o.letterEffect} onChange={(v) => set("letterEffect", v)} />
+          <RangeControl label="caretWidth (line)" value={o.caretWidth} min={1} max={5} unit="px" onChange={(v) => set("caretWidth", v)} />
+          <RangeControl label="letterDuration" value={o.letterDuration} min={0.05} max={0.8} step={0.01} unit="s" onChange={(v) => set("letterDuration", v)} />
           <ToggleList>
             <Toggle label="blink" checked={o.blink} onChange={(v) => set("blink", v)} />
             <Toggle label="smear" checked={o.smear} onChange={(v) => set("smear", v)} />

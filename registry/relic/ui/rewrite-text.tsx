@@ -13,6 +13,22 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
+// How letters arrive and leave.
+const LETTER_EFFECTS = {
+  blur: {
+    initial: { opacity: 0, y: "0.2em", filter: "blur(8px)" },
+    exit: { opacity: 0, scale: 0.8, filter: "blur(10px)" },
+  },
+  rise: {
+    initial: { opacity: 0, y: "0.45em" },
+    exit: { opacity: 0, y: "-0.35em" },
+  },
+  fade: {
+    initial: { opacity: 0 },
+    exit: { opacity: 0 },
+  },
+} as const
+
 export interface RewriteTextProps
   extends Omit<React.ComponentProps<"span">, "children"> {
   /** The words to cycle through. The first one shows first. */
@@ -21,21 +37,33 @@ export interface RewriteTextProps
   hold?: number
   /** Milliseconds per typed letter (a little randomness is added). */
   typeSpeed?: number
-  /** Show the "select all" highlight before deleting. */
-  highlight?: boolean
+  /**
+   * How the old word goes away: "select" highlights it and removes it at
+   * once, "backspace" deletes it letter by letter.
+   */
+  deleteMode?: "select" | "backspace"
+  /** How letters appear and disappear. "none" makes them snap in. */
+  letterEffect?: keyof typeof LETTER_EFFECTS | "none"
+  /** Keep cycling forever, or stop on the last word. */
+  loop?: boolean
+  /** Show the blinking caret. */
+  showCaret?: boolean
   /** Extra classes for the caret, e.g. a color like "bg-amber-500". */
   caretClassName?: string
 }
 
 /**
  * Text that rewrites itself like someone editing it: the caret selects the
- * word, the letters blur away, and the next word is typed in.
+ * word (or backspaces through it), and the next word is typed in.
  */
 export function RewriteText({
   words,
   hold = 2.4,
   typeSpeed = 70,
-  highlight = true,
+  deleteMode = "select",
+  letterEffect = "blur",
+  loop = true,
+  showCaret = true,
   caretClassName,
   className,
   ...props
@@ -58,15 +86,24 @@ export function RewriteText({
     async function run() {
       let index = 0
       while (!cancelled) {
+        if (!loop && index === list.length - 1) return
         await wait(hold * 1000)
         if (cancelled) return
-        if (highlight) {
+
+        const current = list[index]
+        if (deleteMode === "select") {
           setSelected(true)
           await wait(450)
           if (cancelled) return
           setSelected(false)
+          setText("")
+        } else {
+          for (let n = current.length - 1; n >= 0; n--) {
+            if (cancelled) return
+            setText(current.slice(0, n))
+            await wait(Math.max(typeSpeed * 0.5, 25))
+          }
         }
-        setText("")
         setRound((r) => r + 1)
         await wait(320)
 
@@ -85,7 +122,9 @@ export function RewriteText({
       cancelled = true
       timers.forEach(clearTimeout)
     }
-  }, [reduceMotion, wordsKey, hold, typeSpeed, highlight])
+  }, [reduceMotion, wordsKey, hold, typeSpeed, deleteMode, loop])
+
+  const effect = letterEffect === "none" ? null : LETTER_EFFECTS[letterEffect]
 
   return (
     <span
@@ -94,6 +133,9 @@ export function RewriteText({
       {...props}
     >
       <span className="sr-only">{words[0]}</span>
+      {/* An invisible strut keeps the line one line tall even while the word is
+          empty, so the text around it never jumps up and down. */}
+      <span aria-hidden className="inline-block w-0 select-none">&#8203;</span>
       <span
         aria-hidden
         className={cn(
@@ -106,9 +148,9 @@ export function RewriteText({
             <motion.span
               key={`${round}-${i}`}
               className="inline-block whitespace-pre"
-              initial={{ opacity: 0, y: "0.2em", filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+              initial={effect ? effect.initial : false}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+              exit={effect ? effect.exit : { opacity: 0, transition: { duration: 0 } }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
               {ch}
@@ -117,25 +159,27 @@ export function RewriteText({
         </AnimatePresence>
       </span>
       {/* The caret glides with the text because of `layout`. */}
-      <motion.span
-        layout
-        aria-hidden
-        className={cn(
-          "ml-[0.06em] inline-block h-[0.82em] w-[0.055em] min-w-0.5 translate-y-[0.08em] self-center rounded-full bg-primary",
-          caretClassName
-        )}
-        animate={
-          reduceMotion
-            ? { opacity: 0 }
-            : { opacity: selected ? 0 : [1, 1, 0, 0, 1] }
-        }
-        transition={{
-          layout: { type: "spring", stiffness: 700, damping: 45 },
-          opacity: selected
-            ? { duration: 0.1 }
-            : { duration: 1.1, times: [0, 0.5, 0.55, 0.95, 1], repeat: Infinity },
-        }}
-      />
+      {showCaret && (
+        <motion.span
+          layout
+          aria-hidden
+          className={cn(
+            "ml-[0.06em] inline-block h-[0.82em] w-[0.055em] min-w-0.5 translate-y-[0.08em] self-center rounded-full bg-primary",
+            caretClassName
+          )}
+          animate={
+            reduceMotion
+              ? { opacity: 0 }
+              : { opacity: selected ? 0 : [1, 1, 0, 0, 1] }
+          }
+          transition={{
+            layout: { type: "spring", stiffness: 700, damping: 45 },
+            opacity: selected
+              ? { duration: 0.1 }
+              : { duration: 1.1, times: [0, 0.5, 0.55, 0.95, 1], repeat: Infinity },
+          }}
+        />
+      )}
     </span>
   )
 }

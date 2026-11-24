@@ -23,7 +23,21 @@ export interface PerforationProgressProps
   label?: string
   /** Show the percentage next to the label. */
   showValue?: boolean
+  /** Thickness of the dashes. */
+  size?: keyof typeof THICKNESS
+  /** Rounded or square dashes. */
+  shape?: "pill" | "square"
+  /** Space between dashes, in pixels. */
+  gap?: number
+  /** Play the wave across the line when it reaches 100%. */
+  celebrate?: boolean
 }
+
+const THICKNESS = {
+  sm: "h-1",
+  default: "h-1.5",
+  lg: "h-2.5",
+} as const
 
 // Each dash animates by name, so it only moves when its state changes.
 const dash: Variants = {
@@ -55,6 +69,10 @@ export function PerforationProgress({
   segments = 24,
   label,
   showValue = false,
+  size = "default",
+  shape = "pill",
+  gap = 3,
+  celebrate = true,
   className,
   ...props
 }: PerforationProgressProps) {
@@ -86,12 +104,12 @@ export function PerforationProgress({
             )}
           </div>
         )}
-        <div className="flex items-center gap-[3px]">
+        <div className="flex items-center" style={{ gap }}>
           {Array.from({ length: segments }, (_, i) => {
             const on = indeterminate || i < filled
             const state = indeterminate
               ? "loading"
-              : complete
+              : complete && celebrate
                 ? "done"
                 : on
                   ? "on"
@@ -104,7 +122,9 @@ export function PerforationProgress({
                 initial={false}
                 animate={state}
                 className={cn(
-                  "h-1.5 min-w-0 flex-1 rounded-full transition-colors duration-300",
+                  "min-w-0 flex-1 transition-colors duration-300",
+                  THICKNESS[size],
+                  shape === "pill" ? "rounded-full" : "rounded-[1px]",
                   on ? "bg-primary" : "bg-muted"
                 )}
               />

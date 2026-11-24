@@ -3,16 +3,24 @@ import {
   Accessibility,
   ArrowRight,
   ArrowUpRight,
-  Check,
   Code,
   Keyboard,
   Palette,
   ShieldCheck,
   SlidersHorizontal,
-  Trash2,
 } from "lucide-react"
 
+import {
+  AutoElasticDivider,
+  AutoFoldAccordion,
+  AutoHoldToConfirm,
+  AutoPerforatedCard,
+  AutoSmoothCaretInput,
+  AutoStretchTabs,
+} from "@/components/autoplay/auto-demos"
+import { AutoplayFrame } from "@/components/autoplay/autoplay-frame"
 import { BrowseButton } from "@/components/browse-button"
+import { HeroAssembly } from "@/components/landing/hero-assembly"
 import { CodeBlock } from "@/components/docs/code-block"
 import { RelicMark } from "@/components/relic-logo"
 import { SiteFooter } from "@/components/site-footer"
@@ -22,13 +30,9 @@ import { siteConfig } from "@/lib/site"
 import { cn } from "@/lib/utils"
 import { CaretField } from "@/registry/relic/ui/caret-field"
 import { ElasticDivider } from "@/registry/relic/ui/elastic-divider"
-import { FoldAccordion } from "@/registry/relic/ui/fold-accordion"
-import { HoldToConfirmButton } from "@/registry/relic/ui/hold-to-confirm-button"
 import { PerforatedCard } from "@/registry/relic/ui/perforated-card"
 import { RewriteText } from "@/registry/relic/ui/rewrite-text"
 import { ShimmerButton } from "@/registry/relic/ui/shimmer-button"
-import { SmoothCaretInput } from "@/registry/relic/ui/smooth-caret-input"
-import { StretchTabs } from "@/registry/relic/ui/stretch-tabs"
 
 const HERO_WORDS = ["alive", "tactile", "crafted", "human", "yours"]
 
@@ -47,7 +51,7 @@ function Eyebrow({ index, children }: { index: string; children: string }) {
 function SectionDivider() {
   return (
     <div className="mx-auto max-w-6xl px-4">
-      <ElasticDivider className="h-16" bend={28} />
+      <ElasticDivider hitArea={64} bend={28} />
     </div>
   )
 }
@@ -72,7 +76,7 @@ function Tile({
         className
       )}
     >
-      <div className="relative flex min-h-60 flex-1 items-center justify-center p-8">
+      <div className="relative flex min-h-80 flex-1 items-center justify-center p-8">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)] opacity-70"
@@ -132,18 +136,6 @@ const details = [
   },
 ]
 
-const faq = [
-  {
-    value: "what",
-    title: "What is Relic UI?",
-    content: "Animated React components you install with the shadcn CLI.",
-  },
-  {
-    value: "free",
-    title: "Is it free?",
-    content: "Yes. It's open source under the MIT License, for any project.",
-  },
-]
 
 /* -------------------------------------------------------------------------- */
 /*                                    Page                                    */
@@ -161,6 +153,7 @@ export default function Page() {
         <section className="relative overflow-hidden">
           <CaretField
             accentVar="--brand"
+            autoCursor
             className="absolute inset-0 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_30%,black_30%,transparent)]"
           />
           <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 pt-24 pb-16 text-center md:pt-36 md:pb-24">
@@ -184,6 +177,8 @@ export default function Page() {
                 <RewriteText
                   words={HERO_WORDS}
                   caretClassName="bg-brand"
+                  hold={3.4}
+                  typeSpeed={115}
                   className="font-serif font-normal tracking-normal italic"
                 />
               </span>
@@ -206,10 +201,10 @@ export default function Page() {
               </a>
             </div>
 
-            <p className="mt-8 font-mono text-xs text-muted-foreground">
-              {docs.length} components · open source · keyboard &amp;
-              reduced-motion ready
-            </p>
+            {/* Assembly: carets build a live component, then its install command. */}
+            <div className="mt-14 w-full">
+              <HeroAssembly />
+            </div>
           </div>
         </section>
 
@@ -223,7 +218,7 @@ export default function Page() {
               Don&apos;t take our word for it. Touch them.
             </h2>
             <Link
-              href="/docs"
+              href="/components"
               className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
             >
               All components <ArrowRight className="size-3.5" />
@@ -237,14 +232,9 @@ export default function Page() {
               description="The caret glides. Letters ease in and out."
               className="lg:col-span-2"
             >
-              <div className="w-full max-w-md">
-                <SmoothCaretInput
-                  size="lg"
-                  aria-label="Try the smooth caret input"
-                  placeholder="Type, delete, paste — feel the caret"
-                  autoComplete="off"
-                />
-              </div>
+              <AutoplayFrame>
+                <AutoSmoothCaretInput />
+              </AutoplayFrame>
             </Tile>
 
             <Tile
@@ -253,28 +243,9 @@ export default function Page() {
               description="Pull the stub down to tear it off."
               className="lg:row-span-2"
             >
-              <div className="w-full max-w-60">
-                <PerforatedCard
-                  stub={
-                    <div className="flex items-center justify-between text-muted-foreground">
-                      <span>Pull to tear</span>
-                      <span aria-hidden>↓</span>
-                    </div>
-                  }
-                  reveal={
-                    <p className="font-mono text-base font-semibold tracking-widest">
-                      RELIC-2026
-                    </p>
-                  }
-                >
-                  <p className="text-xs tracking-wide text-muted-foreground uppercase">
-                    Gift card
-                  </p>
-                  <p className="mt-2 text-3xl font-semibold tracking-tight">
-                    20% off
-                  </p>
-                </PerforatedCard>
-              </div>
+              <AutoplayFrame>
+                <AutoPerforatedCard />
+              </AutoplayFrame>
             </Tile>
 
             <Tile
@@ -282,16 +253,9 @@ export default function Page() {
               title="Hold to Confirm"
               description="No more accidental deletes."
             >
-              <HoldToConfirmButton
-                variant="destructive"
-                confirmedChildren={
-                  <>
-                    <Check /> Deleted
-                  </>
-                }
-              >
-                <Trash2 /> Hold to delete
-              </HoldToConfirmButton>
+              <AutoplayFrame>
+                <AutoHoldToConfirm />
+              </AutoplayFrame>
             </Tile>
 
             <Tile
@@ -299,14 +263,9 @@ export default function Page() {
               title="Stretch Tabs"
               description="The indicator stretches as it travels."
             >
-              <StretchTabs
-                aria-label="Example tabs"
-                items={[
-                  { value: "design", label: "Design" },
-                  { value: "code", label: "Code" },
-                  { value: "ship", label: "Ship" },
-                ]}
-              />
+              <AutoplayFrame>
+                <AutoStretchTabs />
+              </AutoplayFrame>
             </Tile>
 
             <Tile
@@ -315,9 +274,9 @@ export default function Page() {
               description="Panels unfold like paper."
               className="lg:col-span-2"
             >
-              <div className="w-full max-w-md">
-                <FoldAccordion items={faq} defaultValue={["what"]} />
-              </div>
+              <AutoplayFrame>
+                <AutoFoldAccordion />
+              </AutoplayFrame>
             </Tile>
 
             <Tile
@@ -325,15 +284,9 @@ export default function Page() {
               title="Elastic Divider"
               description="Pluck the line with your cursor."
             >
-              <div className="w-full">
-                <p className="text-center text-sm text-muted-foreground">
-                  above
-                </p>
-                <ElasticDivider bend={30} damping={6} />
-                <p className="text-center text-sm text-muted-foreground">
-                  below
-                </p>
-              </div>
+              <AutoplayFrame>
+                <AutoElasticDivider />
+              </AutoplayFrame>
             </Tile>
 
             <Tile
@@ -457,7 +410,7 @@ export default function Page() {
                     </p>
                     <CodeBlock code={`npx shadcn@latest add ${installUrl}`} />
                     <Link
-                      href="/docs"
+                      href="/components"
                       className="inline-flex items-center gap-1 self-start text-sm font-medium hover:underline"
                     >
                       Browse all components <ArrowRight className="size-4" />

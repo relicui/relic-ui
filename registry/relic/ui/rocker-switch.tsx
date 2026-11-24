@@ -33,6 +33,10 @@ export interface RockerSwitchProps
   /** How far the rocker tilts, in degrees. */
   tilt?: number
   size?: keyof typeof SIZES
+  /** "contrast" fills the pressed half with your primary color. */
+  variant?: "default" | "contrast"
+  /** Show the thin line between the two halves. */
+  showDivider?: boolean
   /** Name for form submission. Sends "on" when checked. */
   name?: string
 }
@@ -49,6 +53,8 @@ export function RockerSwitch({
   offLabel = "O",
   tilt = 16,
   size = "default",
+  variant = "default",
+  showDivider = true,
   name,
   disabled,
   className,
@@ -99,11 +105,11 @@ export function RockerSwitch({
         whileTap={reduceMotion ? undefined : { scale: 0.97 }}
         transition={{ type: "spring", stiffness: 520, damping: 24 }}
       >
-        <Half pressed={checked} className={text}>
+        <Half pressed={checked} contrast={variant === "contrast"} className={text}>
           {onLabel}
         </Half>
-        <span className="w-px shrink-0 bg-border" />
-        <Half pressed={!checked} className={text}>
+        {showDivider && <span className="w-px shrink-0 bg-border" />}
+        <Half pressed={!checked} contrast={false} className={text}>
           {offLabel}
         </Half>
       </motion.span>
@@ -114,10 +120,13 @@ export function RockerSwitch({
 
 function Half({
   pressed,
+  contrast,
   className,
   children,
 }: {
   pressed: boolean
+  /** Fill this half with the primary color while pressed. */
+  contrast: boolean
   className?: string
   children: React.ReactNode
 }) {
@@ -125,7 +134,11 @@ function Half({
     <span
       className={cn(
         "relative flex flex-1 items-center justify-center font-mono font-semibold transition-colors duration-200",
-        pressed ? "text-foreground" : "text-muted-foreground",
+        pressed && contrast
+          ? "bg-primary text-primary-foreground"
+          : pressed
+            ? "text-foreground"
+            : "text-muted-foreground",
         className
       )}
     >

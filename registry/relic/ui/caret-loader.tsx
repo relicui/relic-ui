@@ -39,6 +39,10 @@ export interface CaretLoaderProps
   label?: string
   /** Extra classes for the caret, e.g. a color. */
   caretClassName?: string
+  /** What gets typed, e.g. "•", ".", "*" or an icon. */
+  character?: React.ReactNode
+  /** Hide the caret and keep only the typed characters. */
+  hideCaret?: boolean
 }
 
 /**
@@ -52,6 +56,8 @@ export function CaretLoader({
   size = "default",
   label = "Loading",
   caretClassName,
+  character = "•",
+  hideCaret = false,
   className,
   ...props
 }: CaretLoaderProps) {
@@ -99,18 +105,20 @@ export function CaretLoader({
               exit={{ opacity: 0, scale: 0.4, filter: "blur(2px)" }}
               transition={{ duration: 0.16 }}
             >
-              •
+              {character}
             </motion.span>
           ))}
         </AnimatePresence>
-        <motion.span
-          layout
-          className={cn(
-            "ml-[0.1em] inline-block h-[1.15em] w-[0.12em] min-w-0.5 rounded-full bg-primary",
-            caretClassName
-          )}
-          transition={{ layout: { type: "spring", stiffness: 700, damping: 40 } }}
-        />
+        {!hideCaret && (
+          <motion.span
+            layout
+            className={cn(
+              "ml-[0.1em] inline-block h-[1.15em] w-[0.12em] min-w-0.5 rounded-full bg-primary",
+              caretClassName
+            )}
+            transition={{ layout: { type: "spring", stiffness: 700, damping: 40 } }}
+          />
+        )}
       </span>
     </span>
   )

@@ -16,17 +16,18 @@ import { HoldToConfirmButton } from "@/registry/relic/ui/hold-to-confirm-button"
 const DEFAULTS = {
   variant: "default" as "default" | "destructive",
   size: "default" as "sm" | "default" | "lg",
+  shape: "rounded" as "rounded" | "pill" | "square",
   fillFrom: "left" as "left" | "right" | "center" | "bottom",
   duration: 1.2,
   resetAfter: 1.2,
+  haptics: true,
 }
 
 export function HoldToConfirmButtonPlayground() {
   const [o, setO] = useState(DEFAULTS)
   const [showConfirmed, setShowConfirmed] = useState(true)
   const [count, setCount] = useState(0)
-  const set = <K extends keyof typeof DEFAULTS>(k: K, v: (typeof DEFAULTS)[K]) =>
-    setO((prev) => ({ ...prev, [k]: v }))
+  const [status, setStatus] = useState("Waiting")
 
   return (
     <PlaygroundShell
@@ -39,24 +40,31 @@ export function HoldToConfirmButtonPlayground() {
           <HoldToConfirmButton
             {...o}
             confirmedChildren={showConfirmed ? "Confirmed" : undefined}
-            onConfirm={() => setCount((c) => c + 1)}
+            onHoldStart={() => setStatus("Holding…")}
+            onHoldCancel={() => setStatus("Let go too early")}
+            onConfirm={() => {
+              setCount((c) => c + 1)
+              setStatus("Confirmed")
+            }}
           >
             Hold to confirm
           </HoldToConfirmButton>
           <p className="text-xs text-muted-foreground" aria-live="polite">
-            Confirmed {count} {count === 1 ? "time" : "times"}
+            {status} · confirmed {count} {count === 1 ? "time" : "times"}
           </p>
         </div>
       }
       controls={
         <>
-          <OptionGroup label="variant" options={["default", "destructive"] as const} value={o.variant} onChange={(v) => set("variant", v)} />
-          <OptionGroup label="size" options={["sm", "default", "lg"] as const} value={o.size} onChange={(v) => set("size", v)} />
-          <OptionGroup label="fillFrom" options={["left", "right", "center", "bottom"] as const} value={o.fillFrom} onChange={(v) => set("fillFrom", v)} />
-          <RangeControl label="duration" value={o.duration} min={0.4} max={3} step={0.1} unit="s" onChange={(v) => set("duration", v)} />
-          <RangeControl label="resetAfter" value={o.resetAfter} min={0.4} max={3} step={0.1} unit="s" onChange={(v) => set("resetAfter", v)} />
+          <OptionGroup label="variant" options={["default", "destructive"] as const} value={o.variant} onChange={(v) => setO({ ...o, variant: v })} />
+          <OptionGroup label="size" options={["sm", "default", "lg"] as const} value={o.size} onChange={(v) => setO({ ...o, size: v })} />
+          <OptionGroup label="shape" options={["rounded", "pill", "square"] as const} value={o.shape} onChange={(v) => setO({ ...o, shape: v })} />
+          <OptionGroup label="fillFrom" options={["left", "right", "center", "bottom"] as const} value={o.fillFrom} onChange={(v) => setO({ ...o, fillFrom: v })} />
+          <RangeControl label="duration" value={o.duration} min={0.4} max={3} step={0.1} unit="s" onChange={(v) => setO({ ...o, duration: v })} />
+          <RangeControl label="resetAfter" value={o.resetAfter} min={0.4} max={3} step={0.1} unit="s" onChange={(v) => setO({ ...o, resetAfter: v })} />
           <ToggleList>
             <Toggle label="confirmedChildren" checked={showConfirmed} onChange={setShowConfirmed} />
+            <Toggle label="haptics" checked={o.haptics} onChange={(v) => setO({ ...o, haptics: v })} />
           </ToggleList>
         </>
       }

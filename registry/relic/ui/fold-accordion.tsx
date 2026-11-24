@@ -51,6 +51,12 @@ export interface FoldAccordionProps
   springiness?: keyof typeof SPRINGINESS
   /** How far (in degrees) a closed panel is folded back. */
   foldAngle?: number
+  /** Show the soft shadow along the fold as a panel opens. */
+  showCrease?: boolean
+  /** The open/close indicator on each header. */
+  icon?: "chevron" | "plus" | "none"
+  /** Which side of the header the icon sits on. */
+  iconPosition?: "left" | "right"
 }
 
 export function FoldAccordion({
@@ -62,6 +68,9 @@ export function FoldAccordion({
   variant = "bordered",
   springiness = "paper",
   foldAngle = 92,
+  showCrease = true,
+  icon = "chevron",
+  iconPosition = "right",
   className,
   ...props
 }: FoldAccordionProps) {
@@ -144,22 +153,13 @@ export function FoldAccordion({
                   variant === "plain" ? "px-1" : "px-4"
                 )}
               >
-                {item.title}
-                <svg
-                  aria-hidden
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={cn(
-                    "size-4 shrink-0 text-muted-foreground transition-transform duration-300",
-                    isOpen && "rotate-180"
-                  )}
-                >
-                  <path d="M4 6l4 4 4-4" />
-                </svg>
+                {iconPosition === "left" && (
+                  <TriggerIcon icon={icon} open={isOpen} />
+                )}
+                <span className="flex-1">{item.title}</span>
+                {iconPosition === "right" && (
+                  <TriggerIcon icon={icon} open={isOpen} />
+                )}
               </button>
             </h3>
 
@@ -195,14 +195,14 @@ export function FoldAccordion({
                   >
                     {item.content}
                     {/* Crease shadow that fades as the sheet flattens out. */}
-                    <motion.span
+                    {showCrease && <motion.span
                       aria-hidden
                       className="pointer-events-none absolute inset-0 bg-gradient-to-b from-foreground/15 via-foreground/5 to-transparent"
                       initial={reduceMotion ? false : { opacity: 1 }}
                       animate={{ opacity: 0 }}
                       exit={{ opacity: 1, transition: FOLD }}
                       transition={{ duration: 0.6, ease: "easeOut" }}
-                    />
+                    />}
                   </motion.div>
                 </motion.div>
               )}
@@ -211,5 +211,46 @@ export function FoldAccordion({
         )
       })}
     </div>
+  )
+}
+
+/** The open/close indicator: a chevron that flips, or a plus that turns into a minus. */
+function TriggerIcon({
+  icon,
+  open,
+}: {
+  icon: "chevron" | "plus" | "none"
+  open: boolean
+}) {
+  if (icon === "none") return null
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn(
+        "size-4 shrink-0 text-muted-foreground transition-transform duration-300",
+        icon === "chevron" && open && "rotate-180"
+      )}
+    >
+      {icon === "chevron" ? (
+        <path d="M4 6l4 4 4-4" />
+      ) : (
+        <>
+          <path d="M3.5 8h9" />
+          <path
+            d="M8 3.5v9"
+            className={cn(
+              "origin-center transition-transform duration-300 [transform-box:fill-box]",
+              open && "scale-y-0"
+            )}
+          />
+        </>
+      )}
+    </svg>
   )
 }

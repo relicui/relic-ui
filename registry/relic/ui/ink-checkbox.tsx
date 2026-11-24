@@ -14,9 +14,15 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 const SIZES = {
-  sm: { box: 16, className: "size-4 rounded" },
-  default: { box: 20, className: "size-5 rounded-md" },
-  lg: { box: 24, className: "size-6 rounded-md" },
+  sm: { box: 16, className: "size-4" },
+  default: { box: 20, className: "size-5" },
+  lg: { box: 24, className: "size-6" },
+} as const
+
+const SHAPES = {
+  rounded: "rounded-[30%]",
+  square: "rounded-[3px]",
+  circle: "rounded-full",
 } as const
 
 export interface InkCheckboxProps
@@ -29,6 +35,12 @@ export interface InkCheckboxProps
   /** Text next to the box. Clicking it toggles the box too. */
   label?: React.ReactNode
   size?: keyof typeof SIZES
+  /** Shape of the box. */
+  shape?: keyof typeof SHAPES
+  /** Where the ink starts: where you clicked, the center, or a corner. */
+  inkFrom?: "pointer" | "center" | "corner"
+  /** Seconds the ink takes to fill the box. */
+  inkDuration?: number
   /** Name for form submission. Sends "on" when checked. */
   name?: string
 }
@@ -43,6 +55,9 @@ export function InkCheckbox({
   onCheckedChange,
   label,
   size = "default",
+  shape = "rounded",
+  inkFrom = "pointer",
+  inkDuration = 0.4,
   name,
   disabled,
   className,
@@ -63,7 +78,14 @@ export function InkCheckbox({
   const diameter = box * 3
 
   function toggle() {
-    setOrigin(pointer.current ?? { x: box / 2, y: box / 2 })
+    const center = { x: box / 2, y: box / 2 }
+    setOrigin(
+      inkFrom === "corner"
+        ? { x: 0, y: box }
+        : inkFrom === "center"
+          ? center
+          : (pointer.current ?? center)
+    )
     pointer.current = null
     const next = !checked
     if (checkedProp === undefined) setInternal(next)
@@ -93,6 +115,7 @@ export function InkCheckbox({
         "disabled:cursor-not-allowed disabled:opacity-50",
         checked ? "border-primary" : "border-input bg-background",
         boxClass,
+        SHAPES[shape],
         !label && className
       )}
       {...props}
@@ -112,7 +135,7 @@ export function InkCheckbox({
             initial={reduceMotion ? false : { scale: 0, filter: "blur(2px)" }}
             animate={{ scale: 1, filter: "blur(0px)" }}
             exit={reduceMotion ? { opacity: 0, transition: { duration: 0 } } : { scale: 0, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] } }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: inkDuration, ease: [0.22, 1, 0.36, 1] }}
           />
         )}
       </AnimatePresence>
@@ -133,7 +156,7 @@ export function InkCheckbox({
           transition={
             reduceMotion
               ? { duration: 0 }
-              : { duration: 0.25, delay: checked ? 0.16 : 0, ease: "easeOut" }
+              : { duration: 0.25, delay: checked ? inkDuration * 0.4 : 0, ease: "easeOut" }
           }
         />
       </svg>

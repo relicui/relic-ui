@@ -31,6 +31,9 @@ export function DocsSidebar({ groups }: { groups: SidebarGroup[] }) {
         <Link href="/docs" className={linkClass("/docs")}>
           Introduction
         </Link>
+        <Link href="/components" className={linkClass("/components")}>
+          All components
+        </Link>
       </div>
       {groups.map((group) => (
         <div key={group.id}>

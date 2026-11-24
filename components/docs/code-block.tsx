@@ -85,87 +85,109 @@ export function CodeBlock({
       <div
         data-code-block
         onCopy={handleNativeCopy}
-        className={cn("relative", className)}
+        className={cn("relative flex rounded-lg border bg-muted/40", className)}
       >
-        <pre className="max-h-[480px] overflow-auto rounded-lg border bg-muted/40 p-4 pr-14 font-mono text-sm leading-relaxed">
+        {/* The code scrolls on its own, so it can never slide under the button. */}
+        <pre className="max-h-[480px] min-w-0 flex-1 overflow-auto p-4 pr-2 font-mono text-sm leading-relaxed">
           <code>{code}</code>
         </pre>
 
-        {/* The sweep: a selection highlight drawn by a gold caret. */}
-        <AnimatePresence>
-          {status === "copied" && (
-            <motion.div
-              key={sweep}
-              aria-hidden
-              className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg"
-              exit={{ opacity: 0, transition: { duration: 0.35 } }}
-            >
+        {/* The button's own lane on the right, lined up with the first line. */}
+        <div className="relative w-11 shrink-0">
+          {/* The sweep: a selection highlight drawn by a gold caret. */}
+          <AnimatePresence>
+            {status === "copied" && (
               <motion.div
-                className="absolute inset-y-0 left-0 bg-brand/15"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 0.5, ease: EASE }}
-              />
-              <motion.div
-                className="absolute inset-y-2 w-0.5 -translate-x-full rounded-full bg-brand"
-                initial={{ left: "0%", opacity: 1 }}
-                animate={{ left: "100%", opacity: [1, 1, 0] }}
-                transition={{ duration: 0.5, ease: EASE }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <motion.button
-          layout
-          type="button"
-          onClick={copy}
-          aria-label={
-            status === "copied"
-              ? "Copied"
-              : status === "failed"
-                ? "Copy failed"
-                : "Copy to clipboard"
-          }
-          transition={{ layout: { type: "spring", stiffness: 500, damping: 35 } }}
-          className={cn(
-            "absolute top-2 right-2 inline-flex h-8 items-center gap-1.5 overflow-hidden rounded-md border bg-background px-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground",
-            "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-            status === "copied" && "border-brand/40 text-foreground"
-          )}
-        >
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={status}
-              className="inline-flex"
-              initial={{ opacity: 0, scale: 0.4, rotate: -45, filter: "blur(4px)" }}
-              animate={{ opacity: 1, scale: 1, rotate: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.4, rotate: 45, filter: "blur(4px)" }}
-              transition={{ duration: 0.22 }}
-            >
-              {status === "copied" ? (
-                <Check className="size-4 text-brand" />
-              ) : status === "failed" ? (
-                <X className="size-4 text-destructive" />
-              ) : (
-                <Copy className="size-4" />
-              )}
-            </motion.span>
-          </AnimatePresence>
-          <AnimatePresence initial={false}>
-            {status !== "idle" && (
-              <motion.span
-                className="whitespace-nowrap"
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "auto" }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.2 }}
+                key={sweep}
+                aria-hidden
+                className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg"
+                exit={{ opacity: 0, transition: { duration: 0.35 } }}
               >
-                {status === "copied" ? "Copied" : "Copy failed"}
-              </motion.span>
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-brand/15"
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 0.5, ease: EASE }}
+                />
+                <motion.div
+                  className="absolute inset-y-2 w-0.5 -translate-x-full rounded-full bg-brand"
+                  initial={{ left: "0%", opacity: 1 }}
+                  animate={{ left: "100%", opacity: [1, 1, 0] }}
+                  transition={{ duration: 0.5, ease: EASE }}
+                />
+              </motion.div>
             )}
           </AnimatePresence>
-        </motion.button>
+
+          <motion.button
+            layout
+            type="button"
+            onClick={copy}
+            aria-label={
+              status === "copied"
+                ? "Copied"
+                : status === "failed"
+                  ? "Copy failed"
+                  : "Copy to clipboard"
+            }
+            transition={{
+              layout: { type: "spring", stiffness: 500, damping: 35 },
+            }}
+            className={cn(
+              "absolute top-3.5 right-2 inline-flex h-7 min-w-7 items-center justify-center gap-1.5 overflow-hidden rounded-md border border-transparent px-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-border hover:bg-background hover:text-foreground",
+              "outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+              status === "copied" &&
+                "border-brand/40 bg-background text-foreground"
+            )}
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={status}
+                className="inline-flex"
+                initial={{
+                  opacity: 0,
+                  scale: 0.4,
+                  rotate: -45,
+                  filter: "blur(4px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  rotate: 0,
+                  filter: "blur(0px)",
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.4,
+                  rotate: 45,
+                  filter: "blur(4px)",
+                }}
+                transition={{ duration: 0.22 }}
+              >
+                {status === "copied" ? (
+                  <Check className="size-3.5 text-brand" />
+                ) : status === "failed" ? (
+                  <X className="size-3.5 text-destructive" />
+                ) : (
+                  <Copy className="size-3.5" />
+                )}
+              </motion.span>
+            </AnimatePresence>
+            <AnimatePresence initial={false}>
+              {status !== "idle" && (
+                <motion.span
+                  className="whitespace-nowrap"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {status === "copied" ? "Copied" : "Copy failed"}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
 
         <span role="status" className="sr-only">
           {status === "copied"

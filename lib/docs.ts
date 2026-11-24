@@ -65,6 +65,28 @@ const extras: Record<string, DocExtras> = {
         description: "Seconds the confirmed state stays before the button resets.",
       },
       {
+        name: "shape",
+        type: "\"rounded\" | \"pill\" | \"square\"",
+        default: "\"rounded\"",
+        description: "Corner style of the button.",
+      },
+      {
+        name: "haptics",
+        type: "boolean",
+        default: "true",
+        description: "Short vibration on confirm, on phones that support it.",
+      },
+      {
+        name: "onHoldStart",
+        type: "() => void",
+        description: "Called when the user starts holding.",
+      },
+      {
+        name: "onHoldCancel",
+        type: "() => void",
+        description: "Called when the user lets go too early.",
+      },
+      {
         name: "size",
         type: '"sm" | "default" | "lg"',
         default: '"default"',
@@ -119,6 +141,18 @@ const extras: Record<string, DocExtras> = {
         description: "Line thickness in pixels.",
       },
       {
+        name: "orientation",
+        type: "\"horizontal\" | \"vertical\"",
+        default: "\"horizontal\"",
+        description: "Lie flat between stacked content, or stand up between side-by-side content.",
+      },
+      {
+        name: "hitArea",
+        type: "number",
+        default: "48",
+        description: "Size of the area, in pixels, that reacts to the cursor across the line.",
+      },
+      {
         name: "className",
         type: "string",
         description:
@@ -154,6 +188,17 @@ const extras: Record<string, DocExtras> = {
         type: '"subtle" | "normal" | "elastic"',
         default: '"normal"',
         description: "How much the indicator stretches while moving.",
+      },
+      {
+        name: "fullWidth",
+        type: "boolean",
+        default: "false",
+        description: "Stretch the tabs to fill the full width, sharing it equally.",
+      },
+      {
+        name: "indicatorClassName",
+        type: "string",
+        description: "Extra classes for the moving indicator, e.g. a color.",
       },
       {
         name: "items",
@@ -206,6 +251,24 @@ const extras: Record<string, DocExtras> = {
         type: "number",
         default: "92",
         description: "How far, in degrees, a closed panel is folded back.",
+      },
+      {
+        name: "showCrease",
+        type: "boolean",
+        default: "true",
+        description: "Show the soft shadow along the fold as a panel opens.",
+      },
+      {
+        name: "icon",
+        type: "\"chevron\" | \"plus\" | \"none\"",
+        default: "\"chevron\"",
+        description: "The open/close indicator: a chevron that flips, or a plus that turns into a minus.",
+      },
+      {
+        name: "iconPosition",
+        type: "\"left\" | \"right\"",
+        default: "\"right\"",
+        description: "Which side of the header the icon sits on.",
       },
       {
         name: "items",
@@ -325,6 +388,18 @@ const extras: Record<string, DocExtras> = {
           "The caret gives a small shake when typing or pasting past maxLength.",
       },
       {
+        name: "caretWidth",
+        type: "number",
+        default: "2",
+        description: "Thickness of the line caret, in pixels.",
+      },
+      {
+        name: "letterDuration",
+        type: "number",
+        default: "0.22",
+        description: "Seconds each new letter takes to appear.",
+      },
+      {
         name: "...props",
         type: 'React.ComponentProps<"input">',
         description:
@@ -383,6 +458,18 @@ const extras: Record<string, DocExtras> = {
         description: "How the stub leaves once it's torn off.",
       },
       {
+        name: "tilt",
+        type: "number",
+        default: "3",
+        description: "How far, in degrees, the stub tilts as you pull it.",
+      },
+      {
+        name: "tearOnClick",
+        type: "boolean",
+        default: "false",
+        description: "A simple click or tap also tears the stub, not just dragging.",
+      },
+      {
         name: "onTear",
         type: "() => void",
         description: "Called when the stub is torn off.",
@@ -417,6 +504,30 @@ const extras: Record<string, DocExtras> = {
         type: "string",
         description:
           'Classes for the shimmer band, e.g. "via-amber-300/50" to change its color.',
+      },
+      {
+        name: "shape",
+        type: "\"rounded\" | \"pill\" | \"square\"",
+        default: "\"rounded\"",
+        description: "Corner style of the button.",
+      },
+      {
+        name: "shimmerWidth",
+        type: "number",
+        default: "50",
+        description: "Width of the shimmer band, as a percentage of the button.",
+      },
+      {
+        name: "angle",
+        type: "number",
+        default: "12",
+        description: "Slant of the band, in degrees. 0 is upright.",
+      },
+      {
+        name: "direction",
+        type: "\"right\" | \"left\"",
+        default: "\"right\"",
+        description: "Which way the light travels.",
       },
       {
         name: "size",

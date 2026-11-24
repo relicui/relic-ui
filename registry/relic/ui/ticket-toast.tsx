@@ -24,6 +24,12 @@ export type TicketToastOptions = {
   stub?: React.ReactNode
   /** Milliseconds before it tears itself off. Infinity keeps it open. */
   duration?: number
+  /** Look of the toast. Adds a matching icon unless `icon` is given. */
+  variant?: "default" | "success" | "error"
+  /** A custom icon before the title. Pass null to show none. */
+  icon?: React.ReactNode
+  /** A button inside the toast, e.g. { label: "Undo", onClick }. */
+  action?: { label: string; onClick: () => void }
 }
 
 type Toast = TicketToastOptions & { id: number }
@@ -73,15 +79,19 @@ const POSITIONS = {
 
 export interface TicketToasterProps {
   position?: keyof typeof POSITIONS
+  /** Most toasts visible at once. Older ones wait their turn. */
+  max?: number
   className?: string
 }
 
 /** Place once, near the root of your app. Toasts appear here. */
 export function TicketToaster({
   position = "bottom-right",
+  max = 3,
   className,
 }: TicketToasterProps) {
-  const items = useSyncExternalStore(subscribe, () => toasts, () => EMPTY)
+  const all = useSyncExternalStore(subscribe, () => toasts, () => EMPTY)
+  const items = all.slice(-Math.max(max, 1))
 
   return (
     <MotionConfig reducedMotion="user">
@@ -131,9 +141,27 @@ const stub: Variants = {
   },
 }
 
+const VARIANT_ICONS = {
+  default: null,
+  success: (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M5.2 8.2l1.9 1.9 3.7-3.9" />
+    </svg>
+  ),
+  error: (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M8 4.8v3.6M8 11h.01" />
+    </svg>
+  ),
+} as const
+
 function TicketToastItem({ toast }: { toast: Toast }) {
   const [paused, setPaused] = useState(false)
   const duration = toast.duration ?? 4000
+  const variant = toast.variant ?? "default"
+  const icon = toast.icon === undefined ? VARIANT_ICONS[variant] : toast.icon
 
   // Auto-dismiss, paused while the pointer is over the toast.
   useEffect(() => {
@@ -152,13 +180,44 @@ function TicketToastItem({ toast }: { toast: Toast }) {
       exit="exit"
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
-      className="pointer-events-auto flex w-full rounded-xl border bg-background text-sm shadow-lg"
+      data-variant={variant}
+      className={cn(
+        "pointer-events-auto flex w-full rounded-xl border bg-background text-sm shadow-lg",
+        variant === "error" && "border-destructive/40"
+      )}
     >
-      <div className="min-w-0 flex-1 p-4">
-        <div className="font-medium">{toast.title}</div>
-        {toast.description && (
-          <div className="mt-1 text-muted-foreground">{toast.description}</div>
+      <div className="flex min-w-0 flex-1 gap-3 p-4">
+        {icon && (
+          <span
+            aria-hidden
+            className={cn(
+              "mt-0.5 shrink-0 [&_svg]:size-4",
+              variant === "error" ? "text-destructive" : "text-primary"
+            )}
+          >
+            {icon}
+          </span>
         )}
+        <div className="min-w-0 flex-1">
+          <div className={cn("font-medium", variant === "error" && "text-destructive")}>
+            {toast.title}
+          </div>
+          {toast.description && (
+            <div className="mt-1 text-muted-foreground">{toast.description}</div>
+          )}
+          {toast.action && (
+            <button
+              type="button"
+              onClick={() => {
+                toast.action?.onClick()
+                ticketToast.dismiss(toast.id)
+              }}
+              className="mt-2.5 inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              {toast.action.label}
+            </button>
+          )}
+        </div>
       </div>
       <span aria-hidden className="my-2 border-l-2 border-dashed" />
       <motion.button
