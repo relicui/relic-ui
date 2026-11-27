@@ -123,7 +123,7 @@ export function FollowButton({
   const [announce, setAnnounce] = useState("")
 
   const total = followers + (following ? 1 : 0)
-  const text = compact ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(total) : total.toLocaleString()
+  const text = compact ? new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(total) : total.toLocaleString("en-US")
   const chars = Array.from(text)
   const shown = mutuals.slice(0, 3)
   const others = Math.max(0, (mutualCount ?? mutuals.length) - Math.min(2, mutuals.length))
@@ -142,14 +142,14 @@ export function FollowButton({
     names.length === 0
       ? null
       : others > 0
-        ? `${names.join(", ")} and ${others.toLocaleString()} other${others === 1 ? "" : "s"}`
+        ? `${names.join(", ")} and ${others.toLocaleString("en-US")} other${others === 1 ? "" : "s"}`
         : names.length > 1
           ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`
           : names[0]
 
   return (
     <MotionConfig reducedMotion="user">
-      <div data-slot="follow-button" className={cn("flex w-full items-center gap-3", className)}>
+      <div data-slot="follow-button" className={cn("flex w-full flex-wrap items-center justify-between gap-x-3 gap-y-2.5", className)}>
         {showMutuals && (shown.length > 0 || following) && (
           <span aria-hidden className="flex shrink-0 -space-x-2">
             <AnimatePresence initial={false}>
@@ -174,27 +174,27 @@ export function FollowButton({
           </span>
         )}
 
-        <span className="min-w-0 flex-1 text-sm">
+        <span className="min-w-[120px] flex-1 overflow-hidden text-sm">
           {showCount && (
             <span aria-hidden className="flex items-baseline gap-1 leading-none">
-              <span className="flex font-semibold tabular-nums">
+              <span className="flex shrink-0 font-semibold tabular-nums">
                 {chars.map((ch, i) => {
                   const k = chars.length - i
                   return /\d/.test(ch) ? (
                     <Digit key={k} n={Number(ch)} />
                   ) : (
-                    <span key={k} className="inline-block h-[1em]">
+                    <span key={k} className="flex h-[1em] items-center">
                       {ch}
                     </span>
                   )
                 })}
               </span>
-              <span className="text-muted-foreground">{unit}</span>
+              <span className="truncate text-muted-foreground">{unit}</span>
             </span>
           )}
           {showMutuals && sentence && <span className="mt-1 block truncate text-xs text-muted-foreground">Followed by {sentence}</span>}
           <span className="sr-only">
-            {total.toLocaleString()} {unit}
+            {total.toLocaleString("en-US")} {unit}
           </span>
         </span>
 
@@ -211,7 +211,7 @@ export function FollowButton({
           }}
           transition={{ type: "spring", stiffness: 500, damping: 32 }}
           className={cn(
-            "relative flex shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-full font-medium whitespace-nowrap outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+            "relative ml-auto flex shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-full font-medium whitespace-nowrap outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
             size === "sm" ? "h-8 px-3.5 text-xs" : "h-9 px-4 text-sm",
             !following && "bg-foreground text-background",
             following && !unfollowing && "border bg-background text-foreground",

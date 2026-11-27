@@ -112,7 +112,7 @@ export function FollowerTicker({
   size = "md",
   href,
   icon,
-  locale,
+  locale = "en-US",
   className,
 }: FollowerTickerProps) {
   const p = info(platform)
@@ -128,7 +128,7 @@ export function FollowerTicker({
     setPrev(count)
   }
 
-  const fmtCompact = (n: number) => new Intl.NumberFormat(locale ?? "en", { notation: "compact", maximumFractionDigits: 1 }).format(n)
+  const fmtCompact = (n: number) => new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(n)
   const text = compact ? fmtCompact(count) : count.toLocaleString(locale)
   const chars = Array.from(text)
 
@@ -184,7 +184,7 @@ export function FollowerTicker({
               return /\d/.test(ch) ? (
                 <Digit key={k} n={Number(ch)} />
               ) : (
-                <span key={k} className="inline-block h-[1em]">
+                <span key={k} className="flex h-[1em] items-center">
                   {ch}
                 </span>
               )

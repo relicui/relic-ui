@@ -60,8 +60,9 @@ export function AutoFoldTree() {
   const [step, setStep] = useState(0)
   useAutoplayInterval(1300, () => setStep((s) => (s + 1) % path.length))
   const selected = ["page", "docs-page", "slug-page", "header", "fold-tree", "readme"][step]
+  // h-82 fits the deepest step: 11 rows × 28px + padding + border
   return (
-    <div className="h-72 w-full max-w-xs rounded-xl border bg-background p-2">
+    <div className="h-82 w-full max-w-xs rounded-xl border bg-background p-2">
       <FoldTree data={projectFiles} expanded={path[step]} selected={selected} />
     </div>
   )

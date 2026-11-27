@@ -101,7 +101,7 @@ function smoothPath(p: { x: number; y: number }[]) {
 
 function Sparkline({
   values,
-  locale,
+  locale = "en-US",
   pointLabel,
 }: {
   values: number[]
@@ -230,7 +230,7 @@ export function VisitorCount({
   showSparkline = true,
   pointLabel = (i, n) => (i === n - 1 ? "now" : `${n - 1 - i} min ago`),
   compact = false,
-  locale,
+  locale = "en-US",
   size = "md",
   className,
 }: VisitorCountProps) {
@@ -275,7 +275,7 @@ export function VisitorCount({
               return /\d/.test(ch) ? (
                 <Digit key={key} n={Number(ch)} />
               ) : (
-                <span key={key} className="inline-block h-[1em]">
+                <span key={key} className="flex h-[1em] items-center">
                   {ch}
                 </span>
               )

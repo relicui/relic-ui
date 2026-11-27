@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import type { Metadata } from "next"
+import { cacheLife } from "next/cache"
 import { Check, Heart, Info } from "lucide-react"
 
 import { CodeBlock } from "@/components/docs/code-block"
@@ -43,9 +44,16 @@ const FAQ = [
 
 const creditSnippet = `<a href="${siteConfig.url}">UI components by ${siteConfig.name}</a>`
 
+// Read the real LICENSE file so this page can never disagree with it.
+// It only changes on deploy, so the read is cached for good.
+async function readLicense() {
+  "use cache"
+  cacheLife("max")
+  return readFile(path.join(process.cwd(), "LICENSE"), "utf8")
+}
+
 export default async function LicensePage() {
-  // Read the real LICENSE file so this page can never disagree with it.
-  const license = await readFile(path.join(process.cwd(), "LICENSE"), "utf8")
+  const license = await readLicense()
 
   return (
     <>

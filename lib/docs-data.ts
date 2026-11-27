@@ -178,7 +178,7 @@ export const dataExtras: Record<string, DocExtras> = {
       p("pointLabel", "(index, count) => string", "How a point is described on hover, e.g. for hourly data.", "“4 min ago”"),
       p("compact", "boolean", "Short numbers like 12.4K.", "false"),
       p("size", '"sm" | "md" | "lg"', "Size of the number.", '"md"'),
-      p("locale", "string", "Locale for number formatting."),
+      p("locale", "string", "Locale for number formatting, e.g. \"en-IN\" for 2,00,400. Fixed so server and browser match.", '"en-US"'),
     ],
     accessibility: [
       "The count is in a polite live region, read as a plain number rather than single rolling digits.",

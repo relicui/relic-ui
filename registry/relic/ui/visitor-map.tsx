@@ -247,7 +247,7 @@ export function VisitorMap({
               <li key={p.id ?? i} className="absolute" style={{ left: `${(p.x / COLS) * 100}%`, top: `${(p.y / ROWS) * 100}%` }}>
                 <button
                   type="button"
-                  aria-label={`${p.label ?? `${p.lat.toFixed(1)}, ${p.lng.toFixed(1)}`}: ${(p.count ?? 1).toLocaleString()} ${unit}`}
+                  aria-label={`${p.label ?? `${p.lat.toFixed(1)}, ${p.lng.toFixed(1)}`}: ${(p.count ?? 1).toLocaleString("en-US")} ${unit}`}
                   onMouseEnter={() => setHover(i)}
                   onMouseLeave={() => setHover(null)}
                   onFocus={() => setHover(i)}
@@ -281,7 +281,7 @@ export function VisitorMap({
                   <span className={cn("size-1.5 rounded-full", c.bg)} />
                   {shown.label ?? `${shown.lat.toFixed(1)}, ${shown.lng.toFixed(1)}`}
                 </span>
-                <span className="font-mono text-sm font-semibold">{(shown.count ?? 1).toLocaleString()}</span>{" "}
+                <span className="font-mono text-sm font-semibold">{(shown.count ?? 1).toLocaleString("en-US")}</span>{" "}
                 <span className="text-muted-foreground">{unit}</span>
               </motion.div>
             )}

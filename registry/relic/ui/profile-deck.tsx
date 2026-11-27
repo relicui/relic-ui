@@ -118,7 +118,7 @@ export function PlatformGlyph({ platform, className }: { platform: string; class
   }
 }
 
-const compact = (n: number) => new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n)
+const compact = (n: number) => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n)
 const initials = (name?: string) =>
   (name ?? "?")
     .split(/\s+/)
@@ -309,7 +309,7 @@ export function ProfileDeck({
           ))}
         </div>
         <span className="sr-only" aria-live="polite">
-          {info(profiles[top].platform).name}: @{profiles[top].handle.replace(/^@/, "")}, {profiles[top].followers.toLocaleString()} {info(profiles[top].platform).unit}
+          {info(profiles[top].platform).name}: @{profiles[top].handle.replace(/^@/, "")}, {profiles[top].followers.toLocaleString("en-US")} {info(profiles[top].platform).unit}
         </span>
       </div>
     </MotionConfig>

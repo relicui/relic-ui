@@ -40,6 +40,7 @@ export const CATEGORIES = [
   { id: "files", label: "Files & Folders" },
   { id: "data", label: "Data & Analytics" },
   { id: "social", label: "Social & Profiles" },
+  { id: "acoustics", label: "Acoustics & Audio" },
 ] as const
 
 export type CategoryId = (typeof CATEGORIES)[number]["id"]

@@ -71,7 +71,7 @@ function Glyph({ platform, className }: { platform: string; className?: string }
   return <svg {...p}><circle cx="12" cy="12" r="8" /></svg>
 }
 
-const compact = (n: number) => new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n)
+const compact = (n: number) => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n)
 
 function arc(c: number, r: number, deg: number) {
   const d = Math.min(Math.max(deg, 0.01), 359.99)
@@ -186,7 +186,7 @@ export function ReachRings({
                     onMouseEnter={() => setActive(ring.i)}
                     onFocus={() => setActive(ring.i)}
                     onBlur={() => setActive(null)}
-                    aria-label={`${info(ring.platform).name}${ring.handle ? ` @${ring.handle.replace(/^@/, "")}` : ""}: ${ring.followers.toLocaleString()}, ${Math.round(
+                    aria-label={`${info(ring.platform).name}${ring.handle ? ` @${ring.handle.replace(/^@/, "")}` : ""}: ${ring.followers.toLocaleString("en-US")}, ${Math.round(
                       (ring.followers / Math.max(total, 1)) * 100
                     )}% of reach`}
                     className={cn(

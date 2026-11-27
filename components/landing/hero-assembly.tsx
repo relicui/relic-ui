@@ -205,7 +205,8 @@ export function HeroAssembly() {
   const paused = useRef(false)
 
   const scene = SCENES[sceneIndex]
-  const command = `npx shadcn add relicui/relic-ui/${scene.name}`
+  // Our registered shadcn namespace (registry.json "name": "relic-ui").
+  const command = `npx shadcn add @relic-ui/${scene.name}`
   const [typed, setTyped] = useState(0)
 
   // Measure the real component and turn its shape into caret positions.
@@ -473,7 +474,7 @@ export function HeroAssembly() {
         </span>
         <Link
           href={`/docs/${scene.name}`}
-          className="inline-flex items-center gap-0.5 text-foreground underline-offset-4 transition-opacity hover:underline"
+          className="ml-1.5 inline-flex items-center gap-0.5 text-foreground underline-offset-4 transition-opacity hover:underline"
           style={{ opacity: commandDone ? 1 : 0 }}
           tabIndex={commandDone ? 0 : -1}
         >

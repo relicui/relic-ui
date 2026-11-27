@@ -4,8 +4,6 @@ import { brand, MarkSvg } from "@/lib/brand"
 
 // A 512×512 PNG of the logo, to upload as the GitHub (or X, Discord …) avatar.
 // Download it from /brand/avatar.png
-export const dynamic = "force-static"
-
 export function GET() {
   return new ImageResponse(
     (

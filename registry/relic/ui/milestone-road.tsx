@@ -52,12 +52,12 @@ export function MilestoneRoad({
   unit = "followers",
   showProjection = true,
   marker,
-  locale,
+  locale = "en-US",
   className,
 }: MilestoneRoadProps) {
-  const compact = (n: number) => new Intl.NumberFormat(locale ?? "en", { notation: "compact", maximumFractionDigits: 1 }).format(n)
+  const compact = (n: number) => new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(n)
   // UTC keeps the server and browser in agreement, whatever their time zones.
-  const date = (t: number) => new Intl.DateTimeFormat(locale ?? "en", { month: "short", day: "numeric", timeZone: "UTC" }).format(t)
+  const date = (t: number) => new Intl.DateTimeFormat(locale, { month: "short", day: "numeric", timeZone: "UTC" }).format(t)
 
   const model = useMemo(() => {
     const sorted = [...new Set(milestones)].sort((a, b) => a - b)

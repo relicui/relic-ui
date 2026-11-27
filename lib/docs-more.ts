@@ -28,6 +28,16 @@ import RockerSwitchDemo from "@/registry/relic/examples/rocker-switch-demo"
 import SeekerSearchDemo from "@/registry/relic/examples/seeker-search-demo"
 import StretchSwitchDemo from "@/registry/relic/examples/stretch-switch-demo"
 import TicketToastDemo from "@/registry/relic/examples/ticket-toast-demo"
+import TuningForkDemo from "@/registry/relic/examples/tuning-fork-demo"
+import NeedleDropDemo from "@/registry/relic/examples/needle-drop-demo"
+import GeigerCounterDemo from "@/registry/relic/examples/geiger-counter-demo"
+import ConsoleFaderDemo from "@/registry/relic/examples/console-fader-demo"
+import MorseKeyDemo from "@/registry/relic/examples/morse-key-demo"
+import MetronomePendulumDemo from "@/registry/relic/examples/metronome-pendulum-demo"
+import TapeReelDemo from "@/registry/relic/examples/tape-reel-demo"
+import ChordMatrixDemo from "@/registry/relic/examples/chord-matrix-demo"
+import RotaryTunerDemo from "@/registry/relic/examples/rotary-tuner-demo"
+import KalimbaTinesDemo from "@/registry/relic/examples/kalimba-tines-demo"
 
 /* Props shared by the on/off controls. */
 const checkedProps: PropDoc[] = [
@@ -306,6 +316,136 @@ export const moreExtras: Record<string, DocExtras> = {
       "Purely decorative: hidden from screen readers and never blocks clicks.",
       "Pauses when scrolled out of view or when the tab is hidden, to save battery.",
       "With reduced motion on, it's a still pattern.",
+    ],
+  },
+  "tuning-fork": {
+    Demo: TuningForkDemo,
+    props: [
+      { name: "checked", type: "boolean", description: "Whether the tines are active and resonating (controlled)." },
+      { name: "defaultChecked", type: "boolean", default: "false", description: "Initial state (uncontrolled)." },
+      { name: "frequency", type: "number", default: "440", description: "Base pitch in Hertz (A4 concert pitch)." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence audio output." },
+      { name: "onCheckedChange", type: "(checked: boolean) => void", description: "Called when toggled." },
+    ],
+    accessibility: [
+      'Uses role="switch" and aria-checked for standard screen-reader support.',
+      REDUCED_MOTION,
+    ],
+  },
+  "needle-drop": {
+    Demo: NeedleDropDemo,
+    props: [
+      { name: "playing", type: "boolean", description: "Whether the tonearm is dropped and record spinning." },
+      { name: "trackTitle", type: "string", description: "Track or media title label." },
+      { name: "artist", type: "string", description: "Artist or creator label." },
+      { name: "muteCrackle", type: "boolean", default: "false", description: "Mute the procedural vinyl groove crackle." },
+      { name: "onPlayingChange", type: "(playing: boolean) => void", description: "Called when play/pause is toggled." },
+    ],
+    accessibility: [
+      'Accessible click trigger.',
+      REDUCED_MOTION,
+    ],
+  },
+  "geiger-counter": {
+    Demo: GeigerCounterDemo,
+    props: [
+      { name: "rate", type: "number", default: "15", description: "Activity rate between 0 and 100." },
+      { name: "label", type: "string", default: '"System Error Density"', description: "Metric being measured." },
+      { name: "unit", type: "string", default: '"µSv/h"', description: "Measurement unit symbol." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence acoustic geiger clicks." },
+    ],
+    accessibility: [
+      'Analog needle values are exposed in plain text in the header and readout.',
+      REDUCED_MOTION,
+    ],
+  },
+  "console-fader": {
+    Demo: ConsoleFaderDemo,
+    props: [
+      { name: "value", type: "number", description: "Decibel level between -60dB (Mute) and +6dB." },
+      { name: "defaultValue", type: "number", default: "0", description: "Initial decibel level." },
+      { name: "label", type: "string", default: '"Channel Fader"', description: "Header channel label." },
+      { name: "muteFrictionSound", type: "boolean", default: "false", description: "Mute procedural rail friction audio." },
+      { name: "onValueChange", type: "(db: number) => void", description: "Called on fader adjustment." },
+    ],
+    accessibility: [
+      'Keyboard and pointer accessible with discrete decibel preset buttons.',
+      REDUCED_MOTION,
+    ],
+  },
+  "morse-key": {
+    Demo: MorseKeyDemo,
+    props: [
+      { name: "frequency", type: "number", default: "680", description: "CW sidetone frequency in Hertz." },
+      { name: "dashThresholdMs", type: "number", default: "190", description: "Hold duration separating dots from dashes." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence CW sidetone." },
+      { name: "onTextChange", type: "(text: string) => void", description: "Called when decoded text updates." },
+    ],
+    accessibility: [
+      "Hold Space or Enter on the brass lever to key Morse code with full keyboard support.",
+      REDUCED_MOTION,
+    ],
+  },
+  "metronome-pendulum": {
+    Demo: MetronomePendulumDemo,
+    props: [
+      { name: "defaultBpm", type: "number", default: "104", description: "Initial tempo between 40 and 208 BPM." },
+      { name: "beatsPerBar", type: "number", default: "4", description: "Beats per measure for beat-1 bell accent." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence woodblock escapement ticks." },
+      { name: "onBpmChange", type: "(bpm: number) => void", description: "Called when BPM changes." },
+    ],
+    accessibility: [
+      "Starts silent in standby; tempo slider and +/- step buttons are keyboard accessible.",
+      REDUCED_MOTION,
+    ],
+  },
+  "tape-reel": {
+    Demo: TapeReelDemo,
+    props: [
+      { name: "duration", type: "number", default: "180", description: "Total tape length in seconds." },
+      { name: "label", type: "string", default: '"MASTER REEL · 15 IPS"', description: "Deck header label." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence mechanical latch and scrub flutter." },
+      { name: "onProgressChange", type: "(progress: number) => void", description: "Called when tape position changes (0 to 1)." },
+    ],
+    accessibility: [
+      "Transport controls and range scrub bar support full keyboard navigation.",
+      REDUCED_MOTION,
+    ],
+  },
+  "chord-matrix": {
+    Demo: ChordMatrixDemo,
+    props: [
+      { name: "defaultScale", type: '"maj7" | "pentatonic" | "bass"', default: '"maj7"', description: "Initial scale voicing preset." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence polyphonic synth playback." },
+      { name: "onPadTrigger", type: "(note: string, frequency: number) => void", description: "Called when any pad is struck." },
+    ],
+    accessibility: [
+      "Every pad is a labeled button playable via pointer or keyboard keys 1–4, Q–R, A–F, Z–V.",
+      REDUCED_MOTION,
+    ],
+  },
+  "rotary-tuner": {
+    Demo: RotaryTunerDemo,
+    props: [
+      { name: "defaultFrequency", type: "number", default: "96.4", description: "Initial FM frequency (88.0 - 108.0 MHz)." },
+      { name: "stations", type: "RadioStation[]", description: "Preset FM stations along the dial." },
+      { name: "mute", type: "boolean", default: "false", description: "Silence FM static and station lock chimes." },
+      { name: "onFrequencyChange", type: "(freq: number, station: RadioStation | null) => void", description: "Called on dial sweep or station lock." },
+    ],
+    accessibility: [
+      "Range slider and station preset buttons expose exact MHz frequencies and signal strength.",
+      REDUCED_MOTION,
+    ],
+  },
+  "kalimba-tines": {
+    Demo: KalimbaTinesDemo,
+    props: [
+      { name: "mute", type: "boolean", default: "false", description: "Silence woody-metallic kalimba plucks." },
+      { name: "onPluck", type: "(note: string, frequency: number) => void", description: "Called when a tine is plucked." },
+    ],
+    accessibility: [
+      "Each tine is an individual button labeled with its musical note (C4–D5).",
+      REDUCED_MOTION,
     ],
   },
 }

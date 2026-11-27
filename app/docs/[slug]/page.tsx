@@ -1,7 +1,9 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import type { Metadata } from "next"
+import { cacheLife } from "next/cache"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 
 import { CodeBlock } from "@/components/docs/code-block"
 import { ComponentPreview } from "@/components/docs/component-preview"
@@ -11,9 +13,8 @@ import { siteConfig } from "@/lib/site"
 
 type Props = { params: Promise<{ slug: string }> }
 
-// Only the components listed in lib/docs.ts get pages; anything else is a 404.
-export const dynamicParams = false
-
+// Only the components listed in lib/docs.ts get pages; anything else is a 404
+// (the page calls notFound() for unknown slugs).
 export function generateStaticParams() {
   return docs.map((doc) => ({ slug: doc.name }))
 }
@@ -27,7 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Paths in registry.json start with "registry/". Scoping the read to that
 // folder keeps the bundler from tracing the whole project.
+// Source files only change on deploy, so the read is cached for good.
 async function readSource(filePath: string) {
+  "use cache"
+  cacheLife("max")
   const relative = filePath.replace(/^registry\//, "")
   const code = await readFile(
     path.join(process.cwd(), "registry", relative),
@@ -45,7 +49,17 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default async function ComponentDocPage({ params }: Props) {
+// The slug is read inside <Suspense> so navigation can start instantly.
+// Every listed component is still prerendered, so visitors don't see the fallback.
+export default function ComponentDocPage({ params }: Props) {
+  return (
+    <Suspense fallback={<div className="min-h-[60vh]" />}>
+      <ComponentDoc params={params} />
+    </Suspense>
+  )
+}
+
+async function ComponentDoc({ params }: Props) {
   const { slug } = await params
   const doc = getDoc(slug)
   if (!doc) notFound()

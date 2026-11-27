@@ -1,3 +1,4 @@
+import { cacheLife } from "next/cache"
 import Link from "next/link"
 
 import { RelicMark } from "@/components/relic-logo"
@@ -10,6 +11,13 @@ const links = [
   { href: "/sitemap.xml", label: "Sitemap" },
   { href: "/robots.txt", label: "robots.txt" },
 ]
+
+// The year is cached and refreshed daily, so pages can still be prerendered.
+async function CurrentYear() {
+  "use cache"
+  cacheLife("days")
+  return new Date().getFullYear()
+}
 
 function Dot() {
   return (
@@ -26,7 +34,7 @@ export function SiteFooter() {
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="inline-flex items-center gap-1.5">
             <RelicMark className="size-4" title="" />
-            {siteConfig.name} © {new Date().getFullYear()}
+            {siteConfig.name} © <CurrentYear />
           </span>
           <Dot />
           <span>Open source · MIT</span>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 
 import { autoDemos } from "@/components/autoplay/auto-demo-map"
 import { AutoplayFrame } from "@/components/autoplay/autoplay-frame"
@@ -14,8 +15,7 @@ import { siteConfig } from "@/lib/site"
 
 type Props = { params: Promise<{ slug: string }> }
 
-export const dynamicParams = false
-
+// Unknown slugs are a 404: the page calls notFound().
 export function generateStaticParams() {
   return docs.map((doc) => ({ slug: doc.name }))
 }
@@ -29,7 +29,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function EmbedPage({ params }: Props) {
+// The slug is read inside <Suspense> so navigation can start instantly.
+// Every listed component is still prerendered, so visitors don't see the fallback.
+export default function EmbedPage({ params }: Props) {
+  return (
+    <Suspense fallback={<main className="min-h-svh bg-background" />}>
+      <EmbedContent params={params} />
+    </Suspense>
+  )
+}
+
+async function EmbedContent({ params }: Props) {
   const { slug } = await params
   const doc = getDoc(slug)
   if (!doc) notFound()

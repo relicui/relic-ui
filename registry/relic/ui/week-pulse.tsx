@@ -89,7 +89,7 @@ export function WeekPulse({
   highlightTop = 3,
   hourFormat = "24h",
   unit = "visits",
-  formatValue = (n) => n.toLocaleString(),
+  formatValue = (n) => n.toLocaleString("en-US"),
   animate = true,
   showLegend = true,
   onCellClick,

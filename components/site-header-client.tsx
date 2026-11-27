@@ -354,7 +354,9 @@ function GitHubStars({ stars: initial }: { stars: number | null }) {
           <span aria-hidden className="inline-flex items-center gap-1">
             <svg
               viewBox="0 0 16 16"
-              className="size-3.5 animate-[star-twinkle_2.6s_ease-in-out_infinite] fill-brand stroke-brand text-brand motion-reduce:animate-none group-hover/stars:[animation-duration:1.2s]"
+              // An empty outline at rest, so nobody thinks they've already starred.
+              // It fills with gold only on hover or keyboard focus: an invitation.
+              className="size-3.5 fill-transparent stroke-current transition-colors duration-200 group-hover/stars:fill-brand group-hover/stars:stroke-brand group-focus-visible/stars:fill-brand group-focus-visible/stars:stroke-brand"
               strokeWidth={1.3}
               strokeLinejoin="round"
             >

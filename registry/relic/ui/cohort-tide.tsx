@@ -169,7 +169,7 @@ export function CohortTide({
               >
                 {cohort.label}
               </span>
-              {showSize && <span className="flex items-center justify-end px-1 font-mono text-muted-foreground">{cohort.size?.toLocaleString() ?? "–"}</span>}
+              {showSize && <span className="flex items-center justify-end px-1 font-mono text-muted-foreground">{cohort.size?.toLocaleString("en-US") ?? "–"}</span>}
               {Array.from({ length: periods }, (_, c) => {
                 const v = cohort.values[c]
                 const has = v !== undefined
@@ -181,7 +181,7 @@ export function CohortTide({
                     tabIndex={focus.r === r && focus.c === c ? 0 : -1}
                     aria-label={
                       has
-                        ? `${cohort.label}, ${periodName} ${c}: ${pct(v)} retained${cohort.size ? `, ${Math.round(v * cohort.size).toLocaleString()} people` : ""}`
+                        ? `${cohort.label}, ${periodName} ${c}: ${pct(v)} retained${cohort.size ? `, ${Math.round(v * cohort.size).toLocaleString("en-US")} people` : ""}`
                         : `${cohort.label}, ${periodName} ${c}: not yet`
                     }
                     ref={(el) => {
@@ -252,7 +252,7 @@ export function CohortTide({
               </span>
               {showSize && (
                 <span className="mt-1 flex items-center justify-end border-t px-1 pt-1 font-mono text-muted-foreground">
-                  {cohorts.reduce((t, c) => t + (c.size ?? 0), 0).toLocaleString() || "–"}
+                  {cohorts.reduce((t, c) => t + (c.size ?? 0), 0).toLocaleString("en-US") || "–"}
                 </span>
               )}
               {average.map((v, c) => (

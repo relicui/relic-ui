@@ -117,7 +117,7 @@ export const socialExtras: Record<string, DocExtras> = {
       p("unit", "string", "Word for what is counted.", '"followers"'),
       p("showProjection", "boolean", "Estimate when the next milestone will be reached, from the last 30 days.", "true"),
       p("marker", "ReactNode", "What travels along the road: initials, an icon, an image. Defaults to the count."),
-      p("locale", "string", "Locale for numbers and dates."),
+      p("locale", "string", "Locale for numbers and dates, e.g. \"en-IN\". Fixed so server and browser match.", '"en-US"'),
     ],
     accessibility: [
       "Every milestone can be focused and reads like “10K reached on Mar 2” or “50K: about 23 days away at the current pace”.",

@@ -132,7 +132,7 @@ export function HeatMosaic({
   palette = "green-red",
   range,
   format = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(1)}%`,
-  formatSize = (s) => s.toLocaleString(),
+  formatSize = (s) => s.toLocaleString("en-US"),
   zoomable = true,
   showGroupLabels = true,
   gap = 2,

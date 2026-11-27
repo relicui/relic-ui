@@ -291,12 +291,6 @@ html.lenis body {
     pointer-events: none;
 }
 
-/* The GitHub star in the navbar: always lit, with a slow twinkle. */
-@keyframes star-twinkle {
-    0%, 100% { filter: drop-shadow(0 0 2px var(--brand)); transform: scale(1); }
-    50% { filter: drop-shadow(0 0 7px var(--brand)) drop-shadow(0 0 2px var(--brand)); transform: scale(1.12); }
-}
-
 /* The GitHub logo's "signal": calm most of the time, then a quick double
    blink of gold light with a ring pulsing out behind it. */
 @keyframes signal-blink {
