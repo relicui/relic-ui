@@ -19,14 +19,20 @@ const STEPS = [
   },
   {
     title: "Add a component",
-    body: "Copy the command from any component's page. Install from the website or straight from GitHub.",
-    code: `npx shadcn@latest add ${siteConfig.url}/r/stretch-switch.json\n# or\nnpx shadcn@latest add relicui/relic-ui/stretch-switch`,
+    body: "Add any component by name with @relic-ui, the name Relic UI is registered under in shadcn. Every component page has its command too.",
+    code: "npx shadcn@latest add @relic-ui/stretch-switch",
   },
   {
     title: "Make it yours",
     body: "The source lands in components/ui. Import it, use it, and change anything you like.",
     code: `import { StretchSwitch } from "@/components/ui/stretch-switch"\n\n<StretchSwitch defaultChecked />`,
   },
+]
+
+const AI_PROMPTS = [
+  "Add the Morse Key from @relic-ui",
+  "Show me the loaders in @relic-ui",
+  "Find a @relic-ui component to confirm a delete",
 ]
 
 const PROMISES = [
@@ -72,6 +78,36 @@ export default function GettingStarted() {
           </li>
         ))}
       </ol>
+
+      {/* Use with AI: Relic UI is in the shadcn registry directory, so the
+          shadcn MCP server already knows @relic-ui. Nothing to host. */}
+      <h2 id="mcp" className="mt-20 scroll-mt-24 text-xl font-semibold tracking-tight">
+        Use with AI (MCP)
+      </h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {siteConfig.name} is listed in the shadcn registry directory as <code className="font-mono text-foreground">@relic-ui</code>,
+        so the shadcn MCP server already knows every component. Run this once in your project, then restart your AI
+        app.
+      </p>
+      <CodeBlock className="mt-6" code="npx shadcn@latest mcp init --client claude" />
+      <p className="mt-3 text-sm text-muted-foreground">
+        Using another app? Swap <code className="font-mono text-foreground">claude</code> for{" "}
+        {["cursor", "vscode", "codex", "opencode"].map((client, i, all) => (
+          <span key={client}>
+            <code className="font-mono text-foreground">{client}</code>
+            {i < all.length - 2 ? ", " : i === all.length - 2 ? " or " : "."}
+          </span>
+        ))}
+      </p>
+      <p className="mt-6 text-sm font-medium">Then just ask:</p>
+      <ul className="mt-3 grid gap-2">
+        {AI_PROMPTS.map((prompt) => (
+          <li key={prompt} className="flex items-start gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+            <span aria-hidden className="mt-1.5 h-3.5 w-[2px] shrink-0 rounded-full bg-brand" />
+            <span>&ldquo;{prompt}&rdquo;</span>
+          </li>
+        ))}
+      </ul>
 
       {/* Categories */}
       <div className="mt-20 flex items-end justify-between gap-4">

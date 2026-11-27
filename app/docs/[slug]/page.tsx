@@ -65,7 +65,8 @@ async function ComponentDoc({ params }: Props) {
   if (!doc) notFound()
 
   const { Demo, Playground } = doc
-  const installCommand = `npx shadcn@latest add ${siteConfig.url}/r/${doc.name}.json`
+  // Our registered shadcn namespace (registry.json "name": "relic-ui").
+  const installCommand = `npx shadcn@latest add @relic-ui/${doc.name}`
   const usage = await readSource(doc.demoPath)
   const source = await readSource(doc.files[0].path)
   const deps = doc.dependencies ?? []
@@ -87,9 +88,9 @@ async function ComponentDoc({ params }: Props) {
       <SectionHeading>Installation</SectionHeading>
       <CodeBlock code={installCommand} />
       <p className="mt-3 text-sm text-muted-foreground">
-        Or straight from GitHub:{" "}
-        <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-          npx shadcn@latest add relicui/relic-ui/{doc.name}
+        On an older shadcn version? Use the full address:{" "}
+        <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs break-all">
+          npx shadcn@latest add {siteConfig.url}/r/{doc.name}.json
         </code>
       </p>
 
